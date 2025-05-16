@@ -24,6 +24,7 @@ public class KafkaConsumerService {
     private final PlanRepository planRepository;
     private final UserService userService;
     private final ExpenseService expenseService;
+    private final KafkaProducerService kafkaProducerService;
 
     @KafkaListener(topics = "join_plan", containerFactory = "kafkaListenerContainerFactory")
     @Transactional
@@ -121,8 +122,12 @@ public class KafkaConsumerService {
             log.info("Successfully registered expense: ID={}, amount={} for user='{}' in plan='{}'",
                     savedExpense.getExpenseId(), savedExpense.getAmount(), user.getUsername(), plan.getName());
 
+            // Send notification about the new expense
+            kafkaProducerService.sendExpenseCreatedNotification(savedExpense);
+
         } catch (Exception e) {
             log.error("Error processing expense registration: {}", e.getMessage(), e);
         }
     }
+
 }

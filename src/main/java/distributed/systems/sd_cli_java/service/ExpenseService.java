@@ -26,7 +26,7 @@ public class ExpenseService {
         Expense savedExpense = expenseRepository.save(expense);
 
         if (savedExpense.getPlan() != null) {
-            kafkaProducerService.sendExpenseNotification(savedExpense);
+            kafkaProducerService.sendExpenseCreatedNotification(savedExpense);
         }
 
         return savedExpense;
@@ -37,7 +37,7 @@ public class ExpenseService {
         Expense updatedExpense = expenseRepository.save(expense);
 
         if (updatedExpense.getPlan() != null) {
-            kafkaProducerService.sendExpenseNotification(updatedExpense);
+            kafkaProducerService.sendExpenseCreatedNotification(updatedExpense);
         }
 
         return updatedExpense;

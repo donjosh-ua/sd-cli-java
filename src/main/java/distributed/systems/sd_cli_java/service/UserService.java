@@ -56,22 +56,17 @@ public class UserService {
         return userRepository.findUsersWithExpensesAndNoDebts();
     }
 
-    // Add this method to UserService.java
-    /**
-     * Find a user by username or create a new one if not found
-     * 
-     * @param username The username to search for
-     * @return The existing or newly created User
-     */
     @Transactional
     public User findOrCreateByUsername(String username) {
-        return findByUsername(username)
-                .orElseGet(() -> {
-                    log.info("Creating new user with username: {}", username);
-                    User newUser = new User();
-                    newUser.setUsername(username);
-                    return createUser(newUser);
-                });
+        Optional<User> existingUser = findByUsername(username);
+        if (existingUser.isPresent()) {
+            return existingUser.get();
+        } else {
+            log.info("Creating new user with username: {}", username);
+            User newUser = new User();
+            newUser.setUsername(username);
+            newUser.setPassword("default-password"); // You might want to set a secure default or require password later
+            return createUser(newUser);
+        }
     }
-
 }

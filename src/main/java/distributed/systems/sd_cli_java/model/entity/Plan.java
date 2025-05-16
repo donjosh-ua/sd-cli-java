@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -42,7 +43,7 @@ public class Plan {
     @Column(nullable = false)
     private LocalDateTime date;
 
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.EAGER) // Change to EAGER loading
     @JoinTable(name = "plan_users", joinColumns = @JoinColumn(name = "plan_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     @Builder.Default
     private List<User> users = new ArrayList<>();
@@ -59,5 +60,4 @@ public class Plan {
         expenses.add(expense);
         expense.setPlan(this);
     }
-
 }

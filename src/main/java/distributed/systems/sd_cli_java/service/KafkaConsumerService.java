@@ -1,9 +1,17 @@
 package distributed.systems.sd_cli_java.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import distributed.systems.sd_cli_java.model.dto.ExpenseNotificationDTO;
+import distributed.systems.sd_cli_java.model.dto.ExpenseRegistrationDTO;
+import distributed.systems.sd_cli_java.model.entity.Expense;
+import distributed.systems.sd_cli_java.model.entity.Plan;
+import distributed.systems.sd_cli_java.model.entity.User;
+import distributed.systems.sd_cli_java.repository.PlanRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,8 +21,12 @@ import lombok.extern.slf4j.Slf4j;
 public class KafkaConsumerService {
 
     private final PlanService planService;
+    private final PlanRepository planRepository;
+    private final UserService userService;
+    private final ExpenseService expenseService;
 
     @KafkaListener(topics = "join_plan", containerFactory = "kafkaListenerContainerFactory")
+    @Transactional
     public void consumeExpenseNotification(ExpenseNotificationDTO notification) {
         try {
             log.info("Received join plan request for user: {} to plan: {}",
@@ -39,6 +51,78 @@ public class KafkaConsumerService {
             }
         } catch (Exception e) {
             log.error("Error processing join plan notification: {}", e.getMessage(), e);
+        }
+    }
+
+    @KafkaListener(topics = "register_expense", containerFactory = "expenseRegistrationListenerContainerFactory")
+    @Transactional
+    public void consumeExpenseRegistration(ExpenseRegistrationDTO registration) {
+        try {
+            log.info("Received expense registration request from user: {} for plan: {}",
+                    registration.getUsername(), registration.getPlanId());
+
+            if (registration.getExpense() != null) {
+                log.info("Expense details: name={}, amount={}, type={}",
+                        registration.getExpense().getName(),
+                        registration.getExpense().getAmount(),
+                        registration.getExpense().getType());
+            }
+
+            // Validate required fields
+            if (registration.getPlanId() == null || registration.getUsername() == null
+                    || registration.getExpense() == null || registration.getExpense().getAmount() == null) {
+                log.warn("Cannot process expense registration: missing required fields");
+                return;
+            }
+
+            // Find or create the user
+            User user = userService.findOrCreateByUsername(registration.getUsername());
+
+            // Find the plan with users explicitly fetched to avoid
+            // LazyInitializationException
+            Plan plan = planRepository.findByIdWithUsers(registration.getPlanId())
+                    .orElse(null);
+
+            if (plan == null) {
+                log.warn("Cannot process expense registration: plan with ID {} not found", registration.getPlanId());
+                return;
+            }
+
+            // Check if user is part of the plan
+            boolean userInPlan = false;
+            for (User planUser : plan.getUsers()) {
+                if (planUser.getUserId().equals(user.getUserId())) {
+                    userInPlan = true;
+                    break;
+                }
+            }
+
+            // Add user to plan if not already a member
+            if (!userInPlan) {
+                log.info("User {} is not part of plan {}, adding user to plan", user.getUsername(), plan.getName());
+                plan = planService.addUserToPlan(plan, user);
+            }
+
+            // Create expense entity using the data from the nested expense object
+            Expense expense = Expense.builder()
+                    .name(registration.getExpense().getName() != null ? registration.getExpense().getName()
+                            : "Expense from " + user.getUsername())
+                    .amount(registration.getExpense().getAmount())
+                    .date(registration.getExpense().getDate() != null ? registration.getExpense().getDate()
+                            : LocalDateTime.now())
+                    .type(registration.getExpense().getType() != null ? registration.getExpense().getType() : "shared")
+                    .user(user)
+                    .plan(plan)
+                    .build();
+
+            // Save expense
+            Expense savedExpense = expenseService.createExpense(expense);
+
+            log.info("Successfully registered expense: ID={}, amount={} for user='{}' in plan='{}'",
+                    savedExpense.getExpenseId(), savedExpense.getAmount(), user.getUsername(), plan.getName());
+
+        } catch (Exception e) {
+            log.error("Error processing expense registration: {}", e.getMessage(), e);
         }
     }
 }

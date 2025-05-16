@@ -17,6 +17,7 @@ import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import distributed.systems.sd_cli_java.model.dto.ExpenseNotificationDTO;
+import distributed.systems.sd_cli_java.model.dto.ExpenseRegistrationDTO;
 
 @Configuration
 public class KafkaConfig {
@@ -36,6 +37,14 @@ public class KafkaConfig {
     }
 
     @Bean
+    NewTopic registerExpenseTopic() {
+        return TopicBuilder.name("register_expense")
+                .partitions(1)
+                .replicas(1)
+                .build();
+    }
+
+    @Bean
     ConsumerFactory<String, ExpenseNotificationDTO> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -48,9 +57,6 @@ public class KafkaConfig {
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, ExpenseNotificationDTO.class.getName());
 
-        // Allow unknown properties (important when receiving from external systems)
-        // props.put(JsonDeserializer.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
         return new DefaultKafkaConsumerFactory<>(props,
                 new StringDeserializer(),
                 new ErrorHandlingDeserializer<>(new JsonDeserializer<>(ExpenseNotificationDTO.class, false)));
@@ -60,6 +66,32 @@ public class KafkaConfig {
     public ConcurrentKafkaListenerContainerFactory<String, ExpenseNotificationDTO> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, ExpenseNotificationDTO> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
+        return factory;
+    }
+
+    @Bean
+    ConsumerFactory<String, ExpenseRegistrationDTO> expenseRegistrationConsumerFactory() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class.getName());
+        props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
+        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, ExpenseRegistrationDTO.class.getName());
+        // Add this to help with debugging
+        // props.put(JsonDeserializer.FAIL_UNKNOWN_PROPERTIES, false);
+
+        return new DefaultKafkaConsumerFactory<>(props,
+                new StringDeserializer(),
+                new ErrorHandlingDeserializer<>(new JsonDeserializer<>(ExpenseRegistrationDTO.class, false)));
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, ExpenseRegistrationDTO> expenseRegistrationListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, ExpenseRegistrationDTO> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(expenseRegistrationConsumerFactory());
         return factory;
     }
 }

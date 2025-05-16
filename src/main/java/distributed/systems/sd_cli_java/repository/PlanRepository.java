@@ -25,4 +25,7 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
 
     List<Plan> findByDateAfter(LocalDateTime date);
 
+    // Add this new method to fetch plan with users eagerly
+    @Query("SELECT p FROM Plan p LEFT JOIN FETCH p.users WHERE p.planId = :planId")
+    Optional<Plan> findByIdWithUsers(@Param("planId") Long planId);
 }

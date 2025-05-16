@@ -112,7 +112,7 @@ public class ExpenseController {
     @GetMapping("/by-plan/{planId}")
     public ResponseEntity<?> getExpensesByPlan(@PathVariable Long planId) {
         return planService.findById(planId)
-                .map(plan -> new ResponseEntity<>(expenseService.findExpensesByPlan(plan), HttpStatus.OK))
+                .map(plan -> new ResponseEntity<>(expenseService.findByPlan(plan), HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 

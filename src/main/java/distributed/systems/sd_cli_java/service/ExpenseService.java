@@ -59,7 +59,7 @@ public class ExpenseService {
         return expenseRepository.findByUser(user);
     }
 
-    public List<Expense> findExpensesByPlan(Plan plan) {
+    public List<Expense> findByPlan(Plan plan) {
         return expenseRepository.findByPlan(plan);
     }
 

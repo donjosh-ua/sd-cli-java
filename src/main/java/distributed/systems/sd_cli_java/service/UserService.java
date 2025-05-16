@@ -10,10 +10,12 @@ import distributed.systems.sd_cli_java.model.entity.Plan;
 import distributed.systems.sd_cli_java.model.entity.User;
 import distributed.systems.sd_cli_java.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
@@ -52,6 +54,24 @@ public class UserService {
 
     public List<User> findUsersWithExpensesAndNoDebts() {
         return userRepository.findUsersWithExpensesAndNoDebts();
+    }
+
+    // Add this method to UserService.java
+    /**
+     * Find a user by username or create a new one if not found
+     * 
+     * @param username The username to search for
+     * @return The existing or newly created User
+     */
+    @Transactional
+    public User findOrCreateByUsername(String username) {
+        return findByUsername(username)
+                .orElseGet(() -> {
+                    log.info("Creating new user with username: {}", username);
+                    User newUser = new User();
+                    newUser.setUsername(username);
+                    return createUser(newUser);
+                });
     }
 
 }

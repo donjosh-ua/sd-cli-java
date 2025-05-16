@@ -32,19 +32,19 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Builder.Default
     private List<Expense> expenses = new ArrayList<>();
 
-    @OneToMany(mappedBy = "borrower", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "borrower", cascade = CascadeType.ALL)
     @Builder.Default
     private List<Debt> debts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "lender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "lender", cascade = CascadeType.ALL)
     @Builder.Default
     private List<Debt> loans = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "users")
     @Builder.Default
     private List<Plan> plans = new ArrayList<>();
 

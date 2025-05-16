@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import distributed.systems.sd_cli_java.mapper.ExpenseMapper;
 import distributed.systems.sd_cli_java.model.entity.Expense;
 import distributed.systems.sd_cli_java.model.entity.Plan;
 import distributed.systems.sd_cli_java.model.entity.User;
@@ -22,19 +23,22 @@ import distributed.systems.sd_cli_java.service.ExpenseService;
 import distributed.systems.sd_cli_java.service.PlanService;
 import distributed.systems.sd_cli_java.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/expenses")
 @RequiredArgsConstructor
+@Slf4j
 public class ExpenseController {
 
     private final ExpenseService expenseService;
+    private final ExpenseMapper expenseMapper;
     private final UserService userService;
     private final PlanService planService;
 
     @PostMapping("/create")
-    public ResponseEntity<Expense> createExpense(@RequestBody Expense expenseRequest) {
-        // Extract IDs
+    public ResponseEntity<?> createExpense(@RequestBody Expense expenseRequest) {
+
         Long userId = expenseRequest.getUser().getUserId();
         Long planId = expenseRequest.getPlan() != null ? expenseRequest.getPlan().getPlanId() : null;
 
@@ -58,12 +62,16 @@ public class ExpenseController {
                 .plan(plan)
                 .build();
 
+        log.info("Creating expense: {} for plan: {}", expense.getName(),
+                plan != null ? plan.getName() : "No plan");
+
         Expense createdExpense = expenseService.createExpense(expense);
-        return new ResponseEntity<>(createdExpense, HttpStatus.CREATED);
+
+        return new ResponseEntity<>(expenseMapper.toDto(createdExpense), HttpStatus.CREATED);
     }
 
     @PostMapping("/update")
-    public ResponseEntity<Expense> updateExpense(@RequestBody Expense expense) {
+    public ResponseEntity<?> updateExpense(@RequestBody Expense expense) {
         return expenseService.findById(expense.getExpenseId())
                 .map(existingExpense -> {
                     return new ResponseEntity<>(expenseService.updateExpense(expense), HttpStatus.OK);
@@ -72,20 +80,20 @@ public class ExpenseController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Expense> getExpenseById(@PathVariable Long id) {
+    public ResponseEntity<?> getExpenseById(@PathVariable Long id) {
         return expenseService.findById(id)
                 .map(expense -> new ResponseEntity<>(expense, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping
-    public ResponseEntity<List<Expense>> getAllExpenses() {
+    public ResponseEntity<?> getAllExpenses() {
         List<Expense> expenses = expenseService.findAllExpenses();
         return new ResponseEntity<>(expenses, HttpStatus.OK);
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<Void> deleteExpense(@RequestBody Map<String, Long> payload) {
+    public ResponseEntity<?> deleteExpense(@RequestBody Map<String, Long> payload) {
         Long id = payload.get("id");
         if (expenseService.findById(id).isPresent()) {
             expenseService.deleteExpense(id);
@@ -95,27 +103,27 @@ public class ExpenseController {
     }
 
     @GetMapping("/by-user/{userId}")
-    public ResponseEntity<List<Expense>> getExpensesByUser(@PathVariable Long userId) {
+    public ResponseEntity<?> getExpensesByUser(@PathVariable Long userId) {
         return userService.findById(userId)
                 .map(user -> new ResponseEntity<>(expenseService.findExpensesByUser(user), HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/by-plan/{planId}")
-    public ResponseEntity<List<Expense>> getExpensesByPlan(@PathVariable Long planId) {
+    public ResponseEntity<?> getExpensesByPlan(@PathVariable Long planId) {
         return planService.findById(planId)
                 .map(plan -> new ResponseEntity<>(expenseService.findExpensesByPlan(plan), HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/by-type/{type}")
-    public ResponseEntity<List<Expense>> getExpensesByType(@PathVariable String type) {
+    public ResponseEntity<?> getExpensesByType(@PathVariable String type) {
         List<Expense> expenses = expenseService.findExpensesByType(type);
         return new ResponseEntity<>(expenses, HttpStatus.OK);
     }
 
     @GetMapping("/by-date-range")
-    public ResponseEntity<List<Expense>> getExpensesByDateRange(
+    public ResponseEntity<?> getExpensesByDateRange(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
         List<Expense> expenses = expenseService.findExpensesByDateRange(startDate, endDate);
@@ -123,7 +131,7 @@ public class ExpenseController {
     }
 
     @PostMapping("/by-plan-and-type")
-    public ResponseEntity<List<Expense>> getExpensesByPlanAndType(@RequestBody Map<String, Object> payload) {
+    public ResponseEntity<?> getExpensesByPlanAndType(@RequestBody Map<String, Object> payload) {
         Long planId = ((Number) payload.get("planId")).longValue();
         String type = (String) payload.get("type");
 
@@ -133,7 +141,7 @@ public class ExpenseController {
     }
 
     @PostMapping("/by-user-and-plan")
-    public ResponseEntity<List<Expense>> getExpensesByUserAndPlan(@RequestBody Map<String, Long> payload) {
+    public ResponseEntity<?> getExpensesByUserAndPlan(@RequestBody Map<String, Long> payload) {
         Long userId = payload.get("userId");
         Long planId = payload.get("planId");
 
@@ -145,14 +153,14 @@ public class ExpenseController {
     }
 
     @GetMapping("/total-by-plan/{planId}")
-    public ResponseEntity<Float> getTotalExpensesForPlan(@PathVariable Long planId) {
+    public ResponseEntity<?> getTotalExpensesForPlan(@PathVariable Long planId) {
         return planService.findById(planId)
                 .map(plan -> new ResponseEntity<>(expenseService.calculateTotalExpensesForPlan(plan), HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/total-by-user/{userId}")
-    public ResponseEntity<Float> getTotalExpensesForUser(@PathVariable Long userId) {
+    public ResponseEntity<?> getTotalExpensesForUser(@PathVariable Long userId) {
         return userService.findById(userId)
                 .map(user -> new ResponseEntity<>(expenseService.calculateTotalExpensesForUser(user), HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));

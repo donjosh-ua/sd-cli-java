@@ -29,13 +29,13 @@ public class PlanController {
     private final UserService userService;
 
     @PostMapping("/create")
-    public ResponseEntity<Plan> createPlan(@RequestBody Plan plan) {
+    public ResponseEntity<?> createPlan(@RequestBody Plan plan) {
         Plan createdPlan = planService.createPlan(plan);
         return new ResponseEntity<>(createdPlan, HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Plan> updatePlan(@RequestBody Plan plan) {
+    public ResponseEntity<?> updatePlan(@RequestBody Plan plan) {
         return planService.findById(plan.getPlanId())
                 .map(existingPlan -> {
                     return new ResponseEntity<>(planService.updatePlan(plan), HttpStatus.OK);
@@ -44,20 +44,20 @@ public class PlanController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Plan> getPlanById(@PathVariable Long id) {
+    public ResponseEntity<?> getPlanById(@PathVariable Long id) {
         return planService.findById(id)
                 .map(plan -> new ResponseEntity<>(plan, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping
-    public ResponseEntity<List<Plan>> getAllPlans() {
+    public ResponseEntity<?> getAllPlans() {
         List<Plan> plans = planService.findAllPlans();
         return new ResponseEntity<>(plans, HttpStatus.OK);
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<Void> deletePlan(@RequestBody Map<String, Long> payload) {
+    public ResponseEntity<?> deletePlan(@RequestBody Map<String, Long> payload) {
         Long id = payload.get("id");
         if (planService.findById(id).isPresent()) {
             planService.deletePlan(id);
@@ -67,7 +67,7 @@ public class PlanController {
     }
 
     @PostMapping("/add-user")
-    public ResponseEntity<Plan> addUserToPlan(@RequestBody Map<String, Long> payload) {
+    public ResponseEntity<?> addUserToPlan(@RequestBody Map<String, Long> payload) {
         Long planId = payload.get("planId");
         Long userId = payload.get("userId");
         return planService.findById(planId)
@@ -77,7 +77,7 @@ public class PlanController {
     }
 
     @PostMapping("/remove-user")
-    public ResponseEntity<Plan> removeUserFromPlan(@RequestBody Map<String, Long> payload) {
+    public ResponseEntity<?> removeUserFromPlan(@RequestBody Map<String, Long> payload) {
         Long planId = payload.get("planId");
         Long userId = payload.get("userId");
         return planService.findById(planId)
@@ -87,7 +87,7 @@ public class PlanController {
     }
 
     @PostMapping("/add-expense")
-    public ResponseEntity<Plan> addExpenseToPlan(@RequestBody Map<String, Object> payload) {
+    public ResponseEntity<?> addExpenseToPlan(@RequestBody Map<String, Object> payload) {
         Long planId = ((Number) payload.get("planId")).longValue();
         Expense expense = new Expense();
         expense.setName((String) payload.get("name"));
@@ -105,14 +105,14 @@ public class PlanController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Plan>> getPlansByUser(@PathVariable Long userId) {
+    public ResponseEntity<?> getPlansByUser(@PathVariable Long userId) {
         return userService.findById(userId)
                 .map(user -> new ResponseEntity<>(planService.findPlansByUser(user), HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/by-name/{name}")
-    public ResponseEntity<Plan> getPlanByName(@PathVariable String name) {
+    public ResponseEntity<?> getPlanByName(@PathVariable String name) {
         return planService.findByName(name)
                 .map(plan -> new ResponseEntity<>(plan, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));

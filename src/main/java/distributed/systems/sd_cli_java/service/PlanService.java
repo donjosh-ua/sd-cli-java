@@ -14,14 +14,17 @@ import distributed.systems.sd_cli_java.model.entity.User;
 import distributed.systems.sd_cli_java.repository.ExpenseRepository;
 import distributed.systems.sd_cli_java.repository.PlanRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class PlanService {
 
     private final PlanRepository planRepository;
     private final ExpenseRepository expenseRepository;
+    private final UserService userService;
 
     public Plan createPlan(Plan plan) {
         return planRepository.save(plan);
@@ -79,5 +82,46 @@ public class PlanService {
 
     public Long countPlansByUser(User user) {
         return planRepository.countPlansByUser(user);
+    }
+
+    // Add this method to PlanService.java
+    /**
+     * Add a user to a plan by username
+     * This method finds or creates the user based on username and adds them to the
+     * plan
+     * 
+     * @param username The username of the user to add
+     * @param planId   The ID of the plan to add the user to
+     * @return true if successful, false otherwise
+     */
+    @Transactional
+    public boolean addUserToPlanByUsername(String username, Long planId) {
+        try {
+            // Find the plan first
+            Optional<Plan> planOpt = findById(planId);
+            if (planOpt.isEmpty()) {
+                log.warn("Plan with ID {} not found", planId);
+                return false;
+            }
+
+            Plan plan = planOpt.get();
+
+            // Find or create the user
+            User user = userService.findOrCreateByUsername(username);
+
+            // Add user to plan if not already present
+            if (plan.getUsers().stream().noneMatch(u -> u.getUserId().equals(user.getUserId()))) {
+                plan.getUsers().add(user);
+                updatePlan(plan);
+                log.info("User '{}' added to plan '{}'", username, plan.getName());
+                return true;
+            } else {
+                log.info("User '{}' is already in plan '{}'", username, plan.getName());
+                return true; // Still return true as the end state is what was desired
+            }
+        } catch (Exception e) {
+            log.error("Error adding user '{}' to plan {}: {}", username, planId, e.getMessage(), e);
+            return false;
+        }
     }
 }

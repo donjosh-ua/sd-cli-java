@@ -20,9 +20,9 @@ public class PlanDTO {
     private LocalDateTime date;
 
     @Builder.Default
-    private List<Long> userIds = new ArrayList<>();
+    private List<UserDTO> users = new ArrayList<>();
 
     @Builder.Default
-    private List<Long> expenseIds = new ArrayList<>();
+    private List<ExpenseDTO> expenses = new ArrayList<>();
 
 }

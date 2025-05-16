@@ -36,7 +36,7 @@ public class PlanController {
 
     @PutMapping("/update")
     public ResponseEntity<Plan> updatePlan(@RequestBody Plan plan) {
-        return planService.findById(plan.getId())
+        return planService.findById(plan.getPlanId())
                 .map(existingPlan -> {
                     return new ResponseEntity<>(planService.updatePlan(plan), HttpStatus.OK);
                 })
@@ -96,7 +96,7 @@ public class PlanController {
         @SuppressWarnings("unchecked")
         Map<String, Object> userMap = (Map<String, Object>) payload.get("user");
         User user = new User();
-        user.setId(((Number) userMap.get("id")).longValue());
+        user.setUserId(((Number) userMap.get("id")).longValue());
         expense.setUser(user);
 
         return planService.findById(planId)

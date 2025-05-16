@@ -38,7 +38,7 @@ public class ExpenseController {
 
     @PostMapping("/update")
     public ResponseEntity<Expense> updateExpense(@RequestBody Expense expense) {
-        return expenseService.findById(expense.getId())
+        return expenseService.findById(expense.getExpenseId())
                 .map(existingExpense -> {
                     return new ResponseEntity<>(expenseService.updateExpense(expense), HttpStatus.OK);
                 })

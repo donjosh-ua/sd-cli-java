@@ -38,7 +38,7 @@ public class DebtController {
 
     @PostMapping("/update")
     public ResponseEntity<Debt> updateDebt(@RequestBody Debt debt) {
-        return debtService.findById(debt.getId())
+        return debtService.findById(debt.getDebtId())
                 .map(existingDebt -> {
                     return new ResponseEntity<>(debtService.updateDebt(debt), HttpStatus.OK);
                 })

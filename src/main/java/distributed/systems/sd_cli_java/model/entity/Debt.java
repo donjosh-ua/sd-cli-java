@@ -1,5 +1,8 @@
 package distributed.systems.sd_cli_java.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,11 +22,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "debts")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "debtId")
 public class Debt {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long debtId;
 
     @Column(nullable = false)
     private Float amount;

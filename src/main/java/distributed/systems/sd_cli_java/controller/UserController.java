@@ -32,7 +32,7 @@ public class UserController {
 
     @PostMapping("/update")
     public ResponseEntity<User> updateUser(@RequestBody User user) {
-        return userService.findById(user.getId())
+        return userService.findById(user.getUserId())
                 .map(existingUser -> {
                     return new ResponseEntity<>(userService.updateUser(user), HttpStatus.OK);
                 })
@@ -72,7 +72,7 @@ public class UserController {
     @GetMapping("/by-plan/{planId}")
     public ResponseEntity<List<User>> getUsersByPlan(@PathVariable Long planId) {
         Plan plan = new Plan();
-        plan.setId(planId);
+        plan.setPlanId(planId);
         List<User> users = userService.findUsersByPlan(plan);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }

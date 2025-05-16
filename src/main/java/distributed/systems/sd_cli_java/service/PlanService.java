@@ -56,7 +56,7 @@ public class PlanService {
     public Plan addExpenseToPlan(Plan plan, Expense expense) {
         expense.setPlan(plan);
         expenseRepository.save(expense);
-        return planRepository.findById(plan.getId()).orElse(plan);
+        return planRepository.findById(plan.getPlanId()).orElse(plan);
     }
 
     public List<Plan> findPlansByDateAfter(LocalDateTime date) {

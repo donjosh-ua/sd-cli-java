@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import distributed.systems.sd_cli_java.model.entity.Expense;
+import distributed.systems.sd_cli_java.model.entity.Plan;
+import distributed.systems.sd_cli_java.model.entity.User;
 import distributed.systems.sd_cli_java.service.ExpenseService;
 import distributed.systems.sd_cli_java.service.PlanService;
 import distributed.systems.sd_cli_java.service.UserService;
@@ -31,7 +33,31 @@ public class ExpenseController {
     private final PlanService planService;
 
     @PostMapping("/create")
-    public ResponseEntity<Expense> createExpense(@RequestBody Expense expense) {
+    public ResponseEntity<Expense> createExpense(@RequestBody Expense expenseRequest) {
+        // Extract IDs
+        Long userId = expenseRequest.getUser().getUserId();
+        Long planId = expenseRequest.getPlan() != null ? expenseRequest.getPlan().getPlanId() : null;
+
+        // Look up the actual entities
+        User user = userService.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+
+        Plan plan = null;
+        if (planId != null) {
+            plan = planService.findById(planId)
+                    .orElseThrow(() -> new IllegalArgumentException("Plan not found with ID: " + planId));
+        }
+
+        // Create a new expense with the actual entities
+        Expense expense = Expense.builder()
+                .name(expenseRequest.getName())
+                .amount(expenseRequest.getAmount())
+                .date(expenseRequest.getDate())
+                .type(expenseRequest.getType())
+                .user(user)
+                .plan(plan)
+                .build();
+
         Expense createdExpense = expenseService.createExpense(expense);
         return new ResponseEntity<>(createdExpense, HttpStatus.CREATED);
     }

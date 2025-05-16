@@ -15,7 +15,7 @@ public interface DebtRepository extends JpaRepository<Debt, Long> {
 
     List<Debt> findByLender(User lender);
 
-    List<Debt> findByExpenseId(Long expenseId);
+    List<Debt> findByExpenseExpenseId(Long expenseId);
 
     List<Debt> findByLenderAndBorrower(User lender, User borrower);
 

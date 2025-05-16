@@ -53,7 +53,7 @@ public class DebtService {
     }
 
     public List<Debt> findDebtsByExpense(Long expenseId) {
-        return debtRepository.findByExpenseId(expenseId);
+        return debtRepository.findByExpenseExpenseId(expenseId);
     }
 
     public List<Debt> findDebtsBetweenUsers(User lender, User borrower) {

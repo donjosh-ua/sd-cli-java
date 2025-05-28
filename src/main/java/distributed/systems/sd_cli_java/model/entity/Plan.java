@@ -1,7 +1,6 @@
 package distributed.systems.sd_cli_java.model.entity;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -20,16 +19,14 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "plans")
+@Table(name = "plan")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "planId")
 public class Plan {
 
@@ -43,21 +40,11 @@ public class Plan {
     @Column(nullable = false)
     private LocalDateTime date;
 
-    @ManyToMany(fetch = FetchType.EAGER) // Change to EAGER loading
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "plan_users", joinColumns = @JoinColumn(name = "plan_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    @Builder.Default
-    private List<User> users = new ArrayList<>();
+    private List<User> users;
 
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
-    @Builder.Default
-    private List<Expense> expenses = new ArrayList<>();
+    private List<Expense> expenses;
 
-    public void addUser(User user) {
-        users.add(user);
-    }
-
-    public void addExpense(Expense expense) {
-        expenses.add(expense);
-        expense.setPlan(this);
-    }
 }

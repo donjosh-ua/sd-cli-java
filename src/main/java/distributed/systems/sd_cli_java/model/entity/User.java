@@ -1,6 +1,5 @@
 package distributed.systems.sd_cli_java.model.entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -9,16 +8,14 @@ import com.fasterxml.jackson.annotation.SimpleObjectIdResolver;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
+@Table(name = "user")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "userId", resolver = SimpleObjectIdResolver.class, scope = User.class)
 public class User {
 
@@ -33,19 +30,15 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    @Builder.Default
-    private List<Expense> expenses = new ArrayList<>();
+    private List<Expense> expenses;
 
     @OneToMany(mappedBy = "borrower", cascade = CascadeType.ALL)
-    @Builder.Default
-    private List<Debt> debts = new ArrayList<>();
+    private List<Debt> debts;
 
     @OneToMany(mappedBy = "lender", cascade = CascadeType.ALL)
-    @Builder.Default
-    private List<Debt> loans = new ArrayList<>();
+    private List<Debt> loans;
 
     @ManyToMany(mappedBy = "users")
-    @Builder.Default
-    private List<Plan> plans = new ArrayList<>();
+    private List<Plan> plans;
 
 }

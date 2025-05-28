@@ -4,6 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 .venv
+http/
 
 ### STS ###
 .apt_generated

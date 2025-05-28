@@ -5,6 +5,7 @@ target/
 !**/src/test/**/target/
 .venv
 http/
+.vscode/
 
 ### STS ###
 .apt_generated

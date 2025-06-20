@@ -3,12 +3,13 @@ package distributed.systems.sd_cli_java.mapper;
 import java.util.List;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.MappingConstants.ComponentModel;
 
 import distributed.systems.sd_cli_java.model.dto.DebtDTO;
 import distributed.systems.sd_cli_java.model.entity.Debt;
 
-@Mapper(componentModel = ComponentModel.SPRING)
+@Mapper(componentModel = ComponentModel.SPRING, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface DebtMapper {
 
     DebtDTO toDto(Debt debt);

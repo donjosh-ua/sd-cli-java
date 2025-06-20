@@ -32,6 +32,7 @@ public class Plan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "plan_id", nullable = false)
     private Long planId;
 
     @Column(nullable = false)

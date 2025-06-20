@@ -25,6 +25,7 @@ public class Debt {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "debt_id", nullable = false)
     private Long debtId;
 
     @Column(nullable = false)

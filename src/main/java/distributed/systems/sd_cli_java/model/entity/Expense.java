@@ -27,6 +27,7 @@ public class Expense {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "expense_id", nullable = false)
     private Long expenseId;
 
     @Column(nullable = false, length = 30)

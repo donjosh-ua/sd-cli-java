@@ -69,7 +69,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, ExpenseNotificationDTO> kafkaListenerContainerFactory() {
+    ConcurrentKafkaListenerContainerFactory<String, ExpenseNotificationDTO> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, ExpenseNotificationDTO> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
@@ -95,14 +95,14 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, ExpenseRegistrationDTO> expenseRegistrationListenerContainerFactory() {
+    ConcurrentKafkaListenerContainerFactory<String, ExpenseRegistrationDTO> expenseRegistrationListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, ExpenseRegistrationDTO> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(expenseRegistrationConsumerFactory());
         return factory;
     }
 
     @Bean
-    public ProducerFactory<String, Object> producerFactory() {
+    ProducerFactory<String, Object> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -111,7 +111,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, Object> kafkaTemplate() {
+    KafkaTemplate<String, Object> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 }

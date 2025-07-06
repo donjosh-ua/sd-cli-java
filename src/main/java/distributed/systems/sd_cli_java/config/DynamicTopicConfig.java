@@ -23,14 +23,14 @@ public class DynamicTopicConfig {
     private String bootstrapServers;
 
     @Bean
-    public KafkaAdmin kafkaAdmin() {
+    KafkaAdmin kafkaAdmin() {
         Map<String, Object> configs = new HashMap<>();
         configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         return new KafkaAdmin(configs);
     }
 
     @Bean
-    public AdminClient adminClient() {
+    AdminClient adminClient() {
         return AdminClient.create(kafkaAdmin().getConfigurationProperties());
     }
 

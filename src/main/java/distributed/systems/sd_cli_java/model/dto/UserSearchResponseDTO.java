@@ -1,5 +1,7 @@
 package distributed.systems.sd_cli_java.model.dto;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,9 +11,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class UserSearchResponseDTO {
 
-    private String email;
-    private String nickname;
-    private String photoUrl;
+    private List<UserSearchItemDTO> users;
+    private long total;
+    private int limit;
+    private int offset;
 }

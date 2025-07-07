@@ -86,16 +86,16 @@ public class PlanService {
 
     // Add this method to PlanService.java
     /**
-     * Add a user to a plan by username
-     * This method finds or creates the user based on username and adds them to the
+     * Add a user to a plan by nickname
+     * This method finds or creates the user based on nickname and adds them to the
      * plan
      * 
-     * @param username The username of the user to add
+     * @param nickname The nickname of the user to add
      * @param planId   The ID of the plan to add the user to
      * @return true if successful, false otherwise
      */
     @Transactional
-    public boolean addUserToPlanByUsername(String username, Long planId) {
+    public boolean addUserToPlanByNickname(String nickname, Long planId) {
         try {
             // Find the plan first
             Optional<Plan> planOpt = findById(planId);
@@ -107,20 +107,21 @@ public class PlanService {
             Plan plan = planOpt.get();
 
             // Find or create the user
-            User user = userService.findOrCreateByUsername(username);
+            User user = userService.findByEmail(nickname)
+                    .orElseGet(() -> userService.createOrUpdateUser(nickname, nickname, null));
 
             // Add user to plan if not already present
-            if (plan.getUsers().stream().noneMatch(u -> u.getUserId().equals(user.getUserId()))) {
+            if (plan.getUsers().stream().noneMatch(u -> u.getEmail().equalsIgnoreCase(nickname))) {
                 plan.getUsers().add(user);
                 updatePlan(plan);
-                log.info("User '{}' added to plan '{}'", username, plan.getName());
+                log.info("User '{}' added to plan '{}'", nickname, plan.getName());
                 return true;
             } else {
-                log.info("User '{}' is already in plan '{}'", username, plan.getName());
+                log.info("User '{}' is already in plan '{}'", nickname, plan.getName());
                 return true; // Still return true as the end state is what was desired
             }
         } catch (Exception e) {
-            log.error("Error adding user '{}' to plan {}: {}", username, planId, e.getMessage(), e);
+            log.error("Error adding user '{}' to plan {}: {}", nickname, planId, e.getMessage(), e);
             return false;
         }
     }

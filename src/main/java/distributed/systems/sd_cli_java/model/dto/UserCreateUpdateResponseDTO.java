@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class UserCreateUpdateResponseDTO {
 
-    private String email;
-    private String nickname;
-    private String photoUrl;
+    private boolean success;
+    private UserResponseDTO user;
+    private boolean isNewUser;
 }

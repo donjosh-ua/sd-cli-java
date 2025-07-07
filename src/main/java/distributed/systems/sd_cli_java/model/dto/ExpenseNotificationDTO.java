@@ -20,7 +20,7 @@ public class ExpenseNotificationDTO {
     private LocalDateTime date;
     private String type;
     private Long userId;
-    private String username;
+    private String nickname;
     private Long planId;
     private String planName;
     private Float totalPlanExpense;

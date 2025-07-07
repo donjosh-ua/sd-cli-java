@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class ExpenseRegistrationDTO {
 
     private Long planId;
-    private String username;
+    private String nickname;
 
     @Data
     @NoArgsConstructor

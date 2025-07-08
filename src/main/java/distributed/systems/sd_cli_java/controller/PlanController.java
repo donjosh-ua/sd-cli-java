@@ -37,17 +37,17 @@ public class PlanController {
         throw new IllegalArgumentException("Not implemented yet");
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<?> createPlan(@RequestBody PlanDTO plan) {
         throw new IllegalArgumentException("Not implemented yet");
     }
 
-    @PutMapping("/update")
+    @PutMapping
     public ResponseEntity<?> updatePlan(@RequestBody PlanDTO plan) {
         throw new IllegalArgumentException("Not implemented yet");
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public ResponseEntity<?> deletePlan(@RequestBody Map<String, Long> payload) {
         Long id = payload.get("id");
         if (planService.findById(id).isPresent()) {

@@ -19,8 +19,14 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/plans")
 @RequiredArgsConstructor
 public class PlanController {
+    
+    @GetMapping
+    public ResponseEntity<?> getAllPlans() {
+        List<Plan> plans = planService.findAllPlans();
+        return new ResponseEntity<>(plans, HttpStatus.OK);
+    }
 
-    @GetMapping("/search-by-id/{planId}")
+    @GetMapping("/{planId}")
     public ResponseEntity<?> getPlanById(@PathVariable Long planId) {
         throw new IllegalArgumentException("Not implemented yet");
     }
@@ -35,12 +41,6 @@ public class PlanController {
         throw new IllegalArgumentException("Not implemented yet");
     }
 
-    @GetMapping
-    public ResponseEntity<?> getAllPlans() {
-        List<Plan> plans = planService.findAllPlans();
-        return new ResponseEntity<>(plans, HttpStatus.OK);
-    }
-
     @PostMapping("/delete")
     public ResponseEntity<?> deletePlan(@RequestBody Map<String, Long> payload) {
         Long id = payload.get("id");
@@ -51,55 +51,4 @@ public class PlanController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    // @PostMapping("/add-user")
-    // public ResponseEntity<?> addUserToPlan(@RequestBody Map<String, Long> payload) {
-    //     Long planId = payload.get("planId");
-    //     Long userId = payload.get("userId");
-    //     return planService.findById(planId)
-    //             .flatMap(plan -> userService.findById(userId)
-    //                     .map(user -> new ResponseEntity<>(planService.addUserToPlan(plan, user), HttpStatus.OK)))
-    //             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    // }
-
-    // @PostMapping("/remove-user")
-    // public ResponseEntity<?> removeUserFromPlan(@RequestBody Map<String, Long> payload) {
-    //     Long planId = payload.get("planId");
-    //     Long userId = payload.get("userId");
-    //     return planService.findById(planId)
-    //             .flatMap(plan -> userService.findById(userId)
-    //                     .map(user -> new ResponseEntity<>(planService.removeUserFromPlan(plan, user), HttpStatus.OK)))
-    //             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    // }
-
-    // @PostMapping("/add-expense")
-    // public ResponseEntity<?> addExpenseToPlan(@RequestBody Map<String, Object> payload) {
-    //     Long planId = ((Number) payload.get("planId")).longValue();
-    //     Expense expense = new Expense();
-    //     expense.setName((String) payload.get("name"));
-    //     expense.setAmount(((Number) payload.get("amount")).floatValue());
-
-    //     @SuppressWarnings("unchecked")
-    //     Map<String, Object> userMap = (Map<String, Object>) payload.get("user");
-    //     User user = new User();
-    //     user.setUserId(((Number) userMap.get("id")).longValue());
-    //     expense.setUser(user);
-
-    //     return planService.findById(planId)
-    //             .map(plan -> new ResponseEntity<>(planService.addExpenseToPlan(plan, expense), HttpStatus.OK))
-    //             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    // }
-
-    // @GetMapping("/user/{userId}")
-    // public ResponseEntity<?> getPlansByUser(@PathVariable Long userId) {
-    //     return userService.findById(userId)
-    //             .map(user -> new ResponseEntity<>(planService.findPlansByUser(user), HttpStatus.OK))
-    //             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    // }
-
-    // @GetMapping("/by-name/{name}")
-    // public ResponseEntity<?> getPlanByName(@PathVariable String name) {
-    //     return planService.findByName(name)
-    //             .map(plan -> new ResponseEntity<>(plan, HttpStatus.OK))
-    //             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    // }
 }

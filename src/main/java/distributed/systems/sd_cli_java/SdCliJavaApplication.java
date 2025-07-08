@@ -15,7 +15,7 @@ public class SdCliJavaApplication {
 
 	@GetMapping("/")
 	public String home() {
-		return "Si no saco 10, me suicido";
+		return "Si no saco 10, me mato";
 	}
 
 }

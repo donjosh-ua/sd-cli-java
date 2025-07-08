@@ -3,7 +3,7 @@ package distributed.systems.sd_cli_java.mapper;
 import java.util.List;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants.ComponentModel;
 import org.mapstruct.ReportingPolicy;
 
 import distributed.systems.sd_cli_java.model.dto.UserDTO;
@@ -12,7 +12,7 @@ import distributed.systems.sd_cli_java.model.dto.UserResponseDTO;
 import distributed.systems.sd_cli_java.model.dto.UserSearchItemDTO;
 import distributed.systems.sd_cli_java.model.entity.User;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = ComponentModel.SPRING, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
 
     UserDTO toDto(User user);

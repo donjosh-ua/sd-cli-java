@@ -18,30 +18,30 @@
 // @RequiredArgsConstructor
 // public class ExpenseService {
 
-//     private final ExpenseRepository expenseRepository;
-//     private final KafkaProducerService kafkaProducerService;
+    // private final ExpenseRepository expenseRepository;
+    // private final KafkaProducerService kafkaProducerService;
 
-//     public Expense createExpense(Expense expense) {
+    // public Expense createExpense(Expense expense) {
 
-//         Expense savedExpense = expenseRepository.save(expense);
+    // Expense savedExpense = expenseRepository.save(expense);
 
-//         if (savedExpense.getPlan() != null) {
-//             kafkaProducerService.sendExpenseCreatedNotification(savedExpense);
-//         }
+    // if (savedExpense.getPlan() != null) {
+    // kafkaProducerService.sendExpenseCreatedNotification(savedExpense);
+    // }
 
-//         return savedExpense;
-//     }
+    // return savedExpense;
+    // }
 
-//     public Expense updateExpense(Expense expense) {
+    // public Expense updateExpense(Expense expense) {
 
-//         Expense updatedExpense = expenseRepository.save(expense);
+    // Expense updatedExpense = expenseRepository.save(expense);
 
-//         if (updatedExpense.getPlan() != null) {
-//             kafkaProducerService.sendExpenseCreatedNotification(updatedExpense);
-//         }
+    // if (updatedExpense.getPlan() != null) {
+    // kafkaProducerService.sendExpenseCreatedNotification(updatedExpense);
+    // }
 
-//         return updatedExpense;
-//     }
+    // return updatedExpense;
+    // }
 
 //     public Optional<Expense> findById(Long id) {
 //         return expenseRepository.findById(id);

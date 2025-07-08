@@ -14,21 +14,20 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "expenses")
+@Table(name = "expense")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "expenseId")
 public class Expense {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "expense_id", nullable = false)
     private Long expenseId;
 
     @Column(nullable = false, length = 30)
@@ -41,8 +40,7 @@ public class Expense {
     private LocalDateTime date;
 
     @Column(nullable = false, length = 20)
-    @Builder.Default
-    private String type = "shared"; // default value is "shared"
+    private String type;
 
     @ManyToOne
     @JoinColumn(name = "plan_id")

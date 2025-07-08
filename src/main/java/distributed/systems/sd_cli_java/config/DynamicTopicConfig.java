@@ -19,34 +19,35 @@
 // @Slf4j
 // public class DynamicTopicConfig {
 
-//     @Value("${spring.kafka.bootstrap-servers}")
-//     private String bootstrapServers;
+// @Value("${spring.kafka.bootstrap-servers}")
+// private String bootstrapServers;
 
-//     @Bean
-//     KafkaAdmin kafkaAdmin() {
-//         Map<String, Object> configs = new HashMap<>();
-//         configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-//         return new KafkaAdmin(configs);
-//     }
+// @Bean
+// public KafkaAdmin kafkaAdmin() {
+// Map<String, Object> configs = new HashMap<>();
+// configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+// return new KafkaAdmin(configs);
+// }
 
-//     @Bean
-//     AdminClient adminClient() {
-//         return AdminClient.create(kafkaAdmin().getConfigurationProperties());
-//     }
+// @Bean
+// public AdminClient adminClient() {
+// return AdminClient.create(kafkaAdmin().getConfigurationProperties());
+// }
 
-//     public void createDynamicTopic(String topicName) {
-//         try {
-//             boolean exists = adminClient().listTopics().names().get().contains(topicName);
-//             if (!exists) {
-//                 log.info("Creating new topic: {}", topicName);
-//                 NewTopic newTopic = new NewTopic(topicName, 1, (short) 1);
-//                 adminClient().createTopics(java.util.Collections.singleton(newTopic));
-//                 log.info("Topic created: {}", topicName);
-//             } else {
-//                 log.info("Topic already exists: {}", topicName);
-//             }
-//         } catch (InterruptedException | ExecutionException e) {
-//             log.error("Error creating topic {}: {}", topicName, e.getMessage(), e);
-//         }
-//     }
+// public void createDynamicTopic(String topicName) {
+// try {
+// boolean exists =
+// adminClient().listTopics().names().get().contains(topicName);
+// if (!exists) {
+// log.info("Creating new topic: {}", topicName);
+// NewTopic newTopic = new NewTopic(topicName, 1, (short) 1);
+// adminClient().createTopics(java.util.Collections.singleton(newTopic));
+// log.info("Topic created: {}", topicName);
+// } else {
+// log.info("Topic already exists: {}", topicName);
+// }
+// } catch (InterruptedException | ExecutionException e) {
+// log.error("Error creating topic {}: {}", topicName, e.getMessage(), e);
+// }
+// }
 // }

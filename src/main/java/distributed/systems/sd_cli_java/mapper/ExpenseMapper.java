@@ -1,17 +1,23 @@
 package distributed.systems.sd_cli_java.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingConstants.ComponentModel;
+import org.mapstruct.ReportingPolicy;
 
 import distributed.systems.sd_cli_java.model.dto.ExpenseDTO;
 import distributed.systems.sd_cli_java.model.entity.Expense;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(componentModel = ComponentModel.SPRING, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ExpenseMapper {
 
-    @Mapping(target = "id", source = "expenseId")
-    @Mapping(target = "planId", source = "plan.planId")
     ExpenseDTO toDto(Expense expense);
+
+    Expense toEntity(ExpenseDTO expenseDTO);
+
+    List<ExpenseDTO> toDtoList(List<Expense> expenses);
+
+    List<Expense> toEntityList(List<ExpenseDTO> expenseDTOs);
 
 }

@@ -9,17 +9,14 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.annotation.SimpleObjectIdResolver;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users", indexes = {
@@ -48,20 +45,16 @@ public class User {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    @Builder.Default
-    private List<Expense> expenses = new ArrayList<>();
+    private List<Expense> expenses;
 
     @OneToMany(mappedBy = "borrower", cascade = CascadeType.ALL)
-    @Builder.Default
-    private List<Debt> debts = new ArrayList<>();
+    private List<Debt> debts;
 
     @OneToMany(mappedBy = "lender", cascade = CascadeType.ALL)
-    @Builder.Default
-    private List<Debt> loans = new ArrayList<>();
+    private List<Debt> loans;
 
     @ManyToMany(mappedBy = "users")
-    @Builder.Default
-    private List<Plan> plans = new ArrayList<>();
+    private List<Plan> plans;
 
     @PrePersist
     public void prePersist() {

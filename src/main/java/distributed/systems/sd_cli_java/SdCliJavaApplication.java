@@ -5,8 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@SpringBootApplication
 @RestController
+@SpringBootApplication
 public class SdCliJavaApplication {
 
 	public static void main(String[] args) {
@@ -15,7 +15,7 @@ public class SdCliJavaApplication {
 
 	@GetMapping("/")
 	public String home() {
-		return "Si no saco 10, me mato";
+		return "Welcome to the Bill Splitter Service 🤓";
 	}
 
 }

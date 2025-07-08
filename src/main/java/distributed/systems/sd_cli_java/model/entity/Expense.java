@@ -5,23 +5,18 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "expense")
+@Table(name = "expenses")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "expenseId")
 public class Expense {
 
@@ -41,6 +36,9 @@ public class Expense {
 
     @Column(nullable = false, length = 20)
     private String type;
+
+    @Embedded
+    private TimestampInfo timestampInfo;
 
     @ManyToOne
     @JoinColumn(name = "plan_id")

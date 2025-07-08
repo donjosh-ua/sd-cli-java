@@ -3,23 +3,18 @@ package distributed.systems.sd_cli_java.model.entity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "debt")
+@Table(name = "debts")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "debtId")
 public class Debt {
 
@@ -30,6 +25,9 @@ public class Debt {
 
     @Column(nullable = false)
     private Float amount;
+
+    @Embedded
+    private TimestampInfo timestampInfo;
 
     @ManyToOne
     @JoinColumn(name = "expense_id", nullable = false)

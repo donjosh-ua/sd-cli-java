@@ -1,7 +1,9 @@
 package distributed.systems.sd_cli_java.controller;
 
+import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,12 +15,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import distributed.systems.sd_cli_java.model.dto.PlanDTO;
+import distributed.systems.sd_cli_java.model.entity.Plan;
+import distributed.systems.sd_cli_java.service.PlanService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/plans")
 @RequiredArgsConstructor
 public class PlanController {
+
+    private final PlanService planService;
     
     @GetMapping
     public ResponseEntity<?> getAllPlans() {
@@ -41,7 +47,7 @@ public class PlanController {
         throw new IllegalArgumentException("Not implemented yet");
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<?> deletePlan(@RequestBody Map<String, Long> payload) {
         Long id = payload.get("id");
         if (planService.findById(id).isPresent()) {

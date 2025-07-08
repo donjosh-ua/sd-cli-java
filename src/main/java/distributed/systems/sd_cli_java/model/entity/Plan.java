@@ -6,27 +6,18 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "plan")
+@Table(name = "plans")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "planId")
 public class Plan {
 
@@ -40,6 +31,9 @@ public class Plan {
 
     @Column(nullable = false)
     private LocalDateTime date;
+
+    @Embedded
+    private TimestampInfo timestampInfo;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "plan_users", joinColumns = @JoinColumn(name = "plan_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))

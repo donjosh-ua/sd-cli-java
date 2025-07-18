@@ -1,6 +1,6 @@
 services:
   rabbitmq:
-    container_name: "guide-rabbit"
+    container_name: "rabbit"
     image: "rabbitmq:latest"
     environment:
       - "RABBITMQ_DEFAULT_PASS=secret"

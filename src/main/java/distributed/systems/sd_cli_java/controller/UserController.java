@@ -53,6 +53,7 @@ public class UserController {
 
     @GetMapping("/{email}")
     public ResponseEntity<Object> getUserByEmail(@PathVariable String email) {
+        email = URLDecoder.decode(email, StandardCharsets.UTF_8);
         User user = userService.findByEmail(email);
         return new ResponseEntity<>(userMapper.toResponseDTO(user), HttpStatus.OK);
     }
@@ -89,8 +90,8 @@ public class UserController {
 
     @DeleteMapping("/{email}")
     public ResponseEntity<Object> deleteUser(@PathVariable String email) {
-        String decodedEmail = URLDecoder.decode(email, StandardCharsets.UTF_8);
-        return new ResponseEntity<>(userService.deleteUser(decodedEmail), HttpStatus.NO_CONTENT);
+        email = URLDecoder.decode(email, StandardCharsets.UTF_8);
+        return new ResponseEntity<>(userService.deleteUser(email), HttpStatus.NO_CONTENT);
     }
 
 }

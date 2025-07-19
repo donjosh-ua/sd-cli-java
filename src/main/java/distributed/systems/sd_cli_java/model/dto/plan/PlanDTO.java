@@ -1,4 +1,4 @@
-package distributed.systems.sd_cli_java.model.dto;
+package distributed.systems.sd_cli_java.model.dto.plan;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import distributed.systems.sd_cli_java.model.dto.expense.ExpenseDTO;
+import distributed.systems.sd_cli_java.model.dto.user.UserDTO;
 
 @Data
 @Builder

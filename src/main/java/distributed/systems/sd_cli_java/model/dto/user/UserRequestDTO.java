@@ -1,4 +1,4 @@
-package distributed.systems.sd_cli_java.model.dto;
+package distributed.systems.sd_cli_java.model.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class UserRequestDTO {
 
     private String email;
     private String nickname;

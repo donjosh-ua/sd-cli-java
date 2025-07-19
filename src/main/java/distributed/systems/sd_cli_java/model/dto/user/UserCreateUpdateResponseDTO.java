@@ -1,4 +1,4 @@
-package distributed.systems.sd_cli_java.model.dto;
+package distributed.systems.sd_cli_java.model.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

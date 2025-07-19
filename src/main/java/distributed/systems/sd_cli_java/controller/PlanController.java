@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import distributed.systems.sd_cli_java.model.dto.PlanDTO;
+import distributed.systems.sd_cli_java.model.dto.plan.PlanDTO;
 import distributed.systems.sd_cli_java.model.entity.Plan;
 import distributed.systems.sd_cli_java.service.PlanService;
 import lombok.RequiredArgsConstructor;

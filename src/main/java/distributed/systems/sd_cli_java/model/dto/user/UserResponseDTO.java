@@ -1,4 +1,6 @@
-package distributed.systems.sd_cli_java.model.dto;
+package distributed.systems.sd_cli_java.model.dto.user;
+
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +11,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRequestDTO {
+public class UserResponseDTO {
 
     private String email;
     private String nickname;
     private String photoUrl;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

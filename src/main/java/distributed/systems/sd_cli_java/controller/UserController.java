@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import distributed.systems.sd_cli_java.mapper.UserMapper;
-import distributed.systems.sd_cli_java.model.dto.ErrorResponseDTO;
-import distributed.systems.sd_cli_java.model.dto.UserCreateUpdateResponseDTO;
-import distributed.systems.sd_cli_java.model.dto.UserListResponseDTO;
-import distributed.systems.sd_cli_java.model.dto.UserRequestDTO;
-import distributed.systems.sd_cli_java.model.dto.UserSearchResponseDTO;
-import distributed.systems.sd_cli_java.model.dto.UserUpdateRequestDTO;
+import distributed.systems.sd_cli_java.model.dto.common.ErrorResponseDTO;
+import distributed.systems.sd_cli_java.model.dto.user.UserCreateUpdateResponseDTO;
+import distributed.systems.sd_cli_java.model.dto.user.UserListResponseDTO;
+import distributed.systems.sd_cli_java.model.dto.user.UserRequestDTO;
+import distributed.systems.sd_cli_java.model.dto.user.UserSearchResponseDTO;
+import distributed.systems.sd_cli_java.model.dto.user.UserUpdateRequestDTO;
 import distributed.systems.sd_cli_java.model.entity.User;
 import distributed.systems.sd_cli_java.service.UserService;
 import lombok.RequiredArgsConstructor;

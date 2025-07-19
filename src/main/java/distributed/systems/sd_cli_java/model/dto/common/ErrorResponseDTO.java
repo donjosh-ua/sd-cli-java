@@ -1,4 +1,4 @@
-package distributed.systems.sd_cli_java.model.dto;
+package distributed.systems.sd_cli_java.model.dto.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserSearchItemDTO {
+public class ErrorResponseDTO {
 
-    private String email;
-    private String nickname;
-    private String photoUrl;
+    private String error;
+    private String message;
+    private int code;
 }

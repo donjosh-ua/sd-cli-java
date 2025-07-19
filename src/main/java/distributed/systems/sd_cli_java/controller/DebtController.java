@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import distributed.systems.sd_cli_java.model.dto.DebtDTO;
+import distributed.systems.sd_cli_java.model.dto.debt.DebtDTO;
 import lombok.RequiredArgsConstructor;
 
 @RestController

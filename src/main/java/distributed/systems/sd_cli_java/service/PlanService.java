@@ -24,7 +24,6 @@ public class PlanService {
 
     private final PlanRepository planRepository;
     private final ExpenseRepository expenseRepository;
-    private final UserService userService;
 
     public Plan createPlan(Plan plan) {
         return planRepository.save(plan);
@@ -84,44 +83,4 @@ public class PlanService {
         throw new UnsupportedOperationException("Method not implemented yet");
     }
 
-    /**
-     * Add a user to a plan by nickname
-     * This method finds or creates the user based on nickname and adds them to the
-     * plan
-     * 
-     * @param nickname The nickname of the user to add
-     * @param planId   The ID of the plan to add the user to
-     * @return true if successful, false otherwise
-     */
-    @Transactional
-    public boolean addUserToPlanByNickname(String nickname, Long planId) {
-        try {
-            // Find the plan first
-            Optional<Plan> planOpt = findById(planId);
-            if (planOpt.isEmpty()) {
-                log.warn("Plan with ID {} not found", planId);
-                return false;
-            }
-
-            Plan plan = planOpt.get();
-
-            // Find or create the user
-            User user = userService.findByEmail(nickname)
-                    .orElseGet(() -> userService.createOrUpdateUser(nickname, nickname, null));
-
-            // Add user to plan if not already present
-            if (plan.getUsers().stream().noneMatch(u -> u.getEmail().equalsIgnoreCase(nickname))) {
-                plan.getUsers().add(user);
-                updatePlan(plan);
-                log.info("User '{}' added to plan '{}'", nickname, plan.getName());
-                return true;
-            } else {
-                log.info("User '{}' is already in plan '{}'", nickname, plan.getName());
-                return true; // Still return true as the end state is what was desired
-            }
-        } catch (Exception e) {
-            log.error("Error adding user '{}' to plan {}: {}", nickname, planId, e.getMessage(), e);
-            return false;
-        }
-    }
 }

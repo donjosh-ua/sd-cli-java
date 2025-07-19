@@ -21,4 +21,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ResponseDTO> handleIllegalArgumentException(IllegalArgumentException e) {
+        ResponseDTO response = ResponseDTO.builder()
+                .success(false)
+                .data(Map.of("warn", e.getMessage()))
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
 }

@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
+@Table(name = "users", indexes = { @Index(name = "idx_nickname", columnList = "nickname") })
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "email", resolver = SimpleObjectIdResolver.class, scope = User.class)
 public class User {
 
@@ -48,7 +48,7 @@ public class User {
     @Comment("List of debts where the user is the debtor")
     private List<Debt> borrowedDebts;
 
-    @Column(name = "nickname", nullable = false, length = 100)
+    @Column(name = "nickname", nullable = false, length = 50)
     @Comment("The nickname of the user, used for display purposes")
     private String nickname;
 

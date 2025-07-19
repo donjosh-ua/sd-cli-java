@@ -63,15 +63,15 @@ public class PlanService {
     }
 
     public List<Plan> findPlansByDateAfter(LocalDateTime date) {
-        return planRepository.findByDateAfter(date);
+        throw new UnsupportedOperationException("Method not implemented yet");
     }
 
     public List<Plan> findPlansByUser(User user) {
-        return planRepository.findByUser(user);
+        throw new UnsupportedOperationException("Method not implemented yet");
     }
 
     public Optional<Plan> findByName(String name) {
-        return planRepository.findByName(name);
+        throw new UnsupportedOperationException("Method not implemented yet");
     }
 
     public String generateInvitationLink(Long planId) {
@@ -81,10 +81,9 @@ public class PlanService {
     }
 
     public Long countPlansByUser(User user) {
-        return planRepository.countPlansByUser(user);
+        throw new UnsupportedOperationException("Method not implemented yet");
     }
 
-    // Add this method to PlanService.java
     /**
      * Add a user to a plan by nickname
      * This method finds or creates the user based on nickname and adds them to the

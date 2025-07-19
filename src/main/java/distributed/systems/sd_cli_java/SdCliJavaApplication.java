@@ -15,7 +15,7 @@ public class SdCliJavaApplication {
 
 	@GetMapping("/")
 	public String home() {
-		return "Welcome to the Bill Splitter Service 🤓";
+		return "Welcome to the Billy Splitter Service 🤓";
 	}
 
 }

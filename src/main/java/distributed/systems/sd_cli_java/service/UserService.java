@@ -21,10 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 public class UserService {
 
     private final UserRepository userRepository;
-    
+
     // Email validation pattern
-    private static final Pattern EMAIL_PATTERN = 
-        Pattern.compile("^[A-Za-z0-9+_.-]+@([A-Za-z0-9.-]+\\.[A-Za-z]{2,})$");
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@([A-Za-z0-9.-]+\\.[A-Za-z]{2,})$");
 
     // New API methods
 
@@ -33,12 +32,12 @@ public class UserService {
      */
     public User createOrUpdateUser(String email, String nickname, String photoUrl) {
         validateInput(email, nickname, photoUrl);
-        
+
         String normalizedEmail = email.toLowerCase().trim();
         String trimmedNickname = nickname.trim();
-        
+
         Optional<User> existingUser = userRepository.findByEmail(normalizedEmail);
-        
+
         if (existingUser.isPresent()) {
             // Update existing user
             User user = existingUser.get();
@@ -76,7 +75,7 @@ public class UserService {
         if (photoUrl != null) {
             validatePhotoUrl(photoUrl);
         }
-        
+
         return userRepository.findByEmail(email.toLowerCase().trim())
                 .map(user -> {
                     if (nickname != null) {
@@ -97,11 +96,14 @@ public class UserService {
         if (query == null || query.trim().length() < 2) {
             throw new IllegalArgumentException("Search query must be at least 2 characters");
         }
-        
-        if (limit > 50) limit = 50;
-        if (limit < 1) limit = 10;
-        if (offset < 0) offset = 0;
-        
+
+        if (limit > 50)
+            limit = 50;
+        if (limit < 1)
+            limit = 10;
+        if (offset < 0)
+            offset = 0;
+
         Pageable pageable = PageRequest.of(offset / limit, limit);
         return userRepository.findByNicknameContainingIgnoreCase(query.trim(), pageable);
     }
@@ -110,10 +112,13 @@ public class UserService {
      * Get all users with pagination
      */
     public Page<User> getAllUsers(int limit, int offset) {
-        if (limit > 100) limit = 100;
-        if (limit < 1) limit = 10;
-        if (offset < 0) offset = 0;
-        
+        if (limit > 100)
+            limit = 100;
+        if (limit < 1)
+            limit = 10;
+        if (offset < 0)
+            offset = 0;
+
         Pageable pageable = PageRequest.of(offset / limit, limit);
         return userRepository.findAll(pageable);
     }

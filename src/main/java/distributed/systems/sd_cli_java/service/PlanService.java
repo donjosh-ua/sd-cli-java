@@ -16,10 +16,10 @@ import distributed.systems.sd_cli_java.repository.PlanRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
-@Slf4j
 public class PlanService {
 
     private final PlanRepository planRepository;

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class JoinPlanDTO {
 
-    private Long planId;
+    private String code;
     private String email;
 
 }

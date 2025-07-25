@@ -43,6 +43,10 @@ public class Plan {
     @Comment("List of expenses associated with the plan")
     private List<Expense> expenses;
 
+    @Column(nullable = false, length = 10)
+    @Comment("Unique code for the plan")
+    private String code;
+
     @Column(nullable = false)
     @Comment("Name of the plan")
     private String name;

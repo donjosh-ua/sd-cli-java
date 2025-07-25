@@ -2,6 +2,7 @@ package distributed.systems.sd_cli_java.controller;
 
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,22 +27,22 @@ public class ExpenseController {
 
     @GetMapping("/{expenseId}")
     public ResponseEntity<?> getExpenseById(@PathVariable Long expenseId) {
-        return ResponseEntity.ok(expenseService.findById(expenseId));
+        return new ResponseEntity<>(expenseService.findById(expenseId), HttpStatus.OK);
     }
 
     @GetMapping("/participants/{expenseId}")
     public ResponseEntity<?> getParticipants(@PathVariable Long expenseId) {
-        throw new IllegalArgumentException("Not implemented yet");
+        return new ResponseEntity<>(expenseService.findParticipantsByExpenseId(expenseId), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<?> createExpense(@RequestBody ExpenseRequestDTO expense) {
-        return ResponseEntity.ok(expenseService.createExpense(expense));
+        return new ResponseEntity<>(expenseService.createExpense(expense), HttpStatus.CREATED);
     }
 
     @PutMapping
     public ResponseEntity<?> updateExpense(@RequestBody ExpenseDTO expense) {
-        return ResponseEntity.ok(expenseService.updateExpense(expense));
+        return new ResponseEntity<>(expenseService.updateExpense(expense), HttpStatus.OK);
     }
 
     @DeleteMapping
@@ -50,12 +51,12 @@ public class ExpenseController {
         Long expenseId = fields.get("id");
 
         if (expenseId == null) {
-            return ResponseEntity.badRequest().body("Expense ID is required");
+            return new ResponseEntity<>("Expense ID is required", HttpStatus.BAD_REQUEST);
         }
 
         expenseService.deleteExpense(expenseId);
 
-        return ResponseEntity.ok("Expense deleted successfully");
+        return new ResponseEntity<>("Expense deleted successfully", HttpStatus.OK);
     }
 
 }

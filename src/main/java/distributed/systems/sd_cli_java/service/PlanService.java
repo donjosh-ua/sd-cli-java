@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import distributed.systems.sd_cli_java.common.Util;
 import distributed.systems.sd_cli_java.mapper.ExpenseMapper;
 import distributed.systems.sd_cli_java.mapper.PlanMapper;
 import distributed.systems.sd_cli_java.mapper.UserMapper;
@@ -49,6 +50,7 @@ public class PlanService {
 
         Plan planEntity = planMapper.toEntity(planDto);
 
+        planEntity.setCode(Util.generatePlanCode());
         planEntity.setDate(LocalDateTime.now());
         planEntity.setStatus(true);
         planEntity.setParticipants(List.of(owner));
@@ -149,7 +151,7 @@ public class PlanService {
 
     public PlanDTO joinPlan(JoinPlanDTO joinPlan) {
 
-        Plan plan = planRepository.findById(joinPlan.getPlanId())
+        Plan plan = planRepository.findByCode(joinPlan.getCode())
                 .orElseThrow(() -> new IllegalArgumentException("Plan not found"));
 
         User user = userRepository.findByEmail(joinPlan.getEmail())
@@ -168,7 +170,7 @@ public class PlanService {
 
     public Object quitPlan(JoinPlanDTO joinPlan) {
 
-        Plan plan = planRepository.findById(joinPlan.getPlanId())
+        Plan plan = planRepository.findByCode(joinPlan.getCode())
                 .orElseThrow(() -> new IllegalArgumentException("Plan not found"));
 
         User user = userRepository.findByEmail(joinPlan.getEmail())

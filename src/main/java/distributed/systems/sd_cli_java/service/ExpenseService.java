@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import distributed.systems.sd_cli_java.mapper.ExpenseMapper;
+import distributed.systems.sd_cli_java.mapper.UserMapper;
 import distributed.systems.sd_cli_java.model.dto.expense.ExpenseRequestDTO;
+import distributed.systems.sd_cli_java.model.dto.user.UserResponseDTO;
 import distributed.systems.sd_cli_java.model.dto.expense.ExpenseDTO;
 import distributed.systems.sd_cli_java.model.entity.Expense;
 import distributed.systems.sd_cli_java.repository.ExpenseRepository;
@@ -24,6 +26,7 @@ public class ExpenseService {
     private final ExpenseRepository expenseRepository;
     private final UserRepository userRepository;
     private final ExpenseMapper expenseMapper;
+    private final UserMapper userMapper;
 
     public ExpenseDTO createExpense(ExpenseRequestDTO expense) {
         if (expense.getAmount() <= 0) {
@@ -76,6 +79,19 @@ public class ExpenseService {
 
     public void deleteExpense(Long id) {
         expenseRepository.deleteById(id);
+    }
+
+    public List<UserResponseDTO> findParticipantsByExpenseId(Long expenseId) {
+
+        if (!expenseRepository.existsById(expenseId))
+            throw new IllegalArgumentException("Expense not found");
+
+        return expenseRepository.findById(expenseId)
+                .map(Expense::getParticipants)
+                .orElseThrow(() -> new IllegalArgumentException("No participants found for this expense"))
+                .stream()
+                .map(userMapper::toResponseDTO)
+                .toList();
     }
 
 }

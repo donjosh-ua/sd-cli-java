@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class PlanDTO {
 
     private Long planId;
+    private String code;
     private String name;
     private String owner;
     private LocalDateTime date;

@@ -12,6 +12,7 @@ import distributed.systems.sd_cli_java.mapper.ExpenseMapper;
 import distributed.systems.sd_cli_java.mapper.PlanMapper;
 import distributed.systems.sd_cli_java.mapper.UserMapper;
 import distributed.systems.sd_cli_java.model.dto.expense.ExpenseDTO;
+import distributed.systems.sd_cli_java.model.dto.plan.JoinPlanDTO;
 import distributed.systems.sd_cli_java.model.dto.plan.PlanDTO;
 import distributed.systems.sd_cli_java.model.dto.user.UserResponseDTO;
 import distributed.systems.sd_cli_java.model.entity.Expense;
@@ -79,6 +80,10 @@ public class PlanService {
     }
 
     public Optional<PlanDTO> findById(Long id) {
+
+        if (!planRepository.existsById(id))
+            throw new IllegalArgumentException("Plan not found");
+
         return planRepository.findById(id).map(planMapper::toDto);
     }
 
@@ -159,6 +164,25 @@ public class PlanService {
                 .stream()
                 .map(planMapper::toDto)
                 .toList();
+    }
+
+    public PlanDTO joinPlan(JoinPlanDTO joinPlan) {
+
+        Plan plan = planRepository.findById(joinPlan.getPlanId())
+                .orElseThrow(() -> new IllegalArgumentException("Plan not found"));
+
+        User user = userRepository.findByEmail(joinPlan.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        if (plan.getParticipants().stream().anyMatch(p -> p.getEmail().equals(user.getEmail())))
+            throw new IllegalArgumentException("User already a participant in this plan");
+
+        plan.getParticipants().add(user);
+        planRepository.save(plan);
+
+        log.info("User {} joined plan {}", user.getEmail(), plan.getName());
+
+        return planMapper.toDto(plan);
     }
 
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import distributed.systems.sd_cli_java.model.dto.plan.JoinPlanDTO;
 import distributed.systems.sd_cli_java.model.dto.plan.PlanDTO;
 import distributed.systems.sd_cli_java.service.PlanService;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +52,11 @@ public class PlanController {
     @PostMapping
     public ResponseEntity<?> createPlan(@RequestBody PlanDTO plan) {
         return new ResponseEntity<>(planService.createPlan(plan), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/join")
+    public ResponseEntity<?> joinPlan(@RequestBody JoinPlanDTO joinPlan) {
+        return new ResponseEntity<>(planService.joinPlan(joinPlan), HttpStatus.OK);
     }
 
     @PutMapping

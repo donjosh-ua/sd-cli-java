@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import distributed.systems.sd_cli_java.model.dto.expense.ExpenseRequestDTO;
 import distributed.systems.sd_cli_java.model.dto.expense.ExpenseDTO;
 import distributed.systems.sd_cli_java.service.ExpenseService;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class ExpenseController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createExpense(@RequestBody ExpenseDTO expense) {
+    public ResponseEntity<?> createExpense(@RequestBody ExpenseRequestDTO expense) {
         return ResponseEntity.ok(expenseService.createExpense(expense));
     }
 

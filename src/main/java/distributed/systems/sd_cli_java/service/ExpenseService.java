@@ -1,6 +1,7 @@
 package distributed.systems.sd_cli_java.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,9 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import distributed.systems.sd_cli_java.mapper.ExpenseMapper;
+import distributed.systems.sd_cli_java.model.dto.expense.ExpenseRequestDTO;
 import distributed.systems.sd_cli_java.model.dto.expense.ExpenseDTO;
 import distributed.systems.sd_cli_java.model.entity.Expense;
 import distributed.systems.sd_cli_java.repository.ExpenseRepository;
+import distributed.systems.sd_cli_java.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -19,9 +22,10 @@ import lombok.RequiredArgsConstructor;
 public class ExpenseService {
 
     private final ExpenseRepository expenseRepository;
+    private final UserRepository userRepository;
     private final ExpenseMapper expenseMapper;
 
-    public ExpenseDTO createExpense(ExpenseDTO expense) {
+    public ExpenseDTO createExpense(ExpenseRequestDTO expense) {
         if (expense.getAmount() <= 0) {
             throw new IllegalArgumentException("Expense amount must be greater than zero");
         }
@@ -31,7 +35,17 @@ public class ExpenseService {
         }
 
         Expense expenseEntity = expenseMapper.toEntity(expense);
+
+        expenseEntity.setParticipants(new ArrayList<>());
         expenseEntity.setDate(LocalDateTime.now());
+        expenseEntity.setName(expense.getName());
+        expenseEntity.setAmount(expense.getAmount());
+        expenseEntity.setType(expense.getType());
+
+        for (String participantEmail : expense.getParticipants()) {
+            userRepository.findByEmail(participantEmail).ifPresent(
+                    user -> expenseEntity.getParticipants().add(user));
+        }
 
         expenseRepository.save(expenseEntity);
 

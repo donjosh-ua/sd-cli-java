@@ -7,6 +7,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants.ComponentModel;
 import org.mapstruct.ReportingPolicy;
 
+import distributed.systems.sd_cli_java.model.dto.expense.ExpenseRequestDTO;
 import distributed.systems.sd_cli_java.model.dto.expense.ExpenseDTO;
 import distributed.systems.sd_cli_java.model.entity.Expense;
 
@@ -18,6 +19,10 @@ public interface ExpenseMapper {
 
     @Mapping(target = "plan.planId", source = "planId")
     Expense toEntity(ExpenseDTO expenseDTO);
+
+    @Mapping(target = "plan.planId", source = "planId")
+    @Mapping(target = "participants", ignore = true)
+    Expense toEntity(ExpenseRequestDTO expenseCreationDTO);
 
     List<ExpenseDTO> toDtoList(List<Expense> expenses);
 

@@ -55,6 +55,10 @@ public class Expense {
     @Comment("Type of the expense")
     private String type;
 
+    @Column(nullable = false, length = 20)
+    @Comment("Icon representing the expense")
+    private String icon;
+
     @Embedded
     private TimestampInfo timestampInfo;
 

@@ -6,10 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import distributed.systems.sd_cli_java.model.dto.expense.ExpenseDTO;
 import distributed.systems.sd_cli_java.model.dto.user.UserDTO;
 
 @Data
@@ -26,11 +22,5 @@ public class PlanDTO {
     private String description;
     private String category;
     private Float totalAmount;
-
-    @Builder.Default
-    private List<UserDTO> participants = new ArrayList<>();
-
-    @Builder.Default
-    private List<ExpenseDTO> expenses = new ArrayList<>();
 
 }

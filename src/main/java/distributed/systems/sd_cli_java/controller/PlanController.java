@@ -1,5 +1,7 @@
 package distributed.systems.sd_cli_java.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,22 +30,22 @@ public class PlanController {
 
     @GetMapping("/participants/{planId}")
     public ResponseEntity<?> getParticipants(@PathVariable Long planId) {
-        throw new IllegalArgumentException("Not implemented yet");
+        return new ResponseEntity<>(planService.findParticipantsByPlanId(planId), HttpStatus.OK);
     }
 
     @GetMapping("/expenses/{planId}")
     public ResponseEntity<?> getExpenses(@PathVariable Long planId) {
-        throw new IllegalArgumentException("Not implemented yet");
+        return new ResponseEntity<>(planService.findExpensesByPlanId(planId), HttpStatus.OK);
     }
 
     @GetMapping("/{planId}")
     public ResponseEntity<?> getPlanById(@PathVariable Long planId) {
-        throw new IllegalArgumentException("Not implemented yet");
+        return new ResponseEntity<>(planService.findById(planId), HttpStatus.OK);
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<?> getPlansByUserId(@PathVariable Long userId) {
-        throw new IllegalArgumentException("Not implemented yet");
+    public ResponseEntity<?> getPlansByParticipantId(@PathVariable String userId) {
+        return new ResponseEntity<>(planService.findPlansByParticipantId(userId), HttpStatus.OK);
     }
 
     @PostMapping
@@ -53,7 +55,7 @@ public class PlanController {
 
     @PutMapping
     public ResponseEntity<?> updatePlan(@RequestBody PlanDTO plan) {
-        throw new IllegalArgumentException("Not implemented yet");
+        return new ResponseEntity<>(planService.updatePlan(plan), HttpStatus.OK);
     }
 
 }

@@ -51,6 +51,10 @@ public class Plan {
     @Comment("Date of the plan")
     private LocalDateTime date;
 
+    @Column(nullable = false)
+    @Comment("Status of the plan")
+    private Boolean status;
+
     @Embedded
     private TimestampInfo timestampInfo;
 

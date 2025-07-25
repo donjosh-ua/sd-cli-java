@@ -21,6 +21,7 @@ public class PlanDTO {
     private Long id;
     private String name;
     private LocalDateTime date;
+    private Boolean status;
 
     @Builder.Default
     private List<UserDTO> users = new ArrayList<>();

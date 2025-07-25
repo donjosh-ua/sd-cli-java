@@ -69,3 +69,5 @@ build/
 hs_err_pid*
 replay_pid*
 
+#docker
+k8s

@@ -59,6 +59,11 @@ public class PlanController {
         return new ResponseEntity<>(planService.joinPlan(joinPlan), HttpStatus.OK);
     }
 
+    @PostMapping("/quit")
+    public ResponseEntity<?> quitPlan(@RequestBody JoinPlanDTO joinPlan) {
+        return new ResponseEntity<>(planService.quitPlan(joinPlan), HttpStatus.OK);
+    }
+
     @PutMapping
     public ResponseEntity<?> updatePlan(@RequestBody PlanDTO plan) {
         return new ResponseEntity<>(planService.updatePlan(plan), HttpStatus.OK);

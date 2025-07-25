@@ -137,33 +137,14 @@ public class PlanService {
         return planRepository.findById(plan.getPlanId()).orElse(plan);
     }
 
-    public List<Plan> findPlansByDateAfter(LocalDateTime date) {
-        throw new UnsupportedOperationException("Method not implemented yet");
-    }
-
-    public List<Plan> findPlansByUser(User user) {
-        throw new UnsupportedOperationException("Method not implemented yet");
-    }
-
-    public Optional<Plan> findByName(String name) {
-        throw new UnsupportedOperationException("Method not implemented yet");
-    }
-
     public String generateInvitationLink(Long planId) {
         // In a real app, you'd probably have a more sophisticated way to generate and
         // validate links
         return "http://yourapp.com/join/" + planId + "/" + UUID.randomUUID().toString();
     }
 
-    public Long countPlansByUser(User user) {
-        throw new UnsupportedOperationException("Method not implemented yet");
-    }
-
     public List<PlanDTO> findPlansByParticipantId(String userId) {
-        return planRepository.findByParticipantId(userId)
-                .stream()
-                .map(planMapper::toDto)
-                .toList();
+        return planMapper.toDtoList(planRepository.findByParticipantId(userId));
     }
 
     public PlanDTO joinPlan(JoinPlanDTO joinPlan) {
@@ -181,6 +162,25 @@ public class PlanService {
         planRepository.save(plan);
 
         log.info("User {} joined plan {}", user.getEmail(), plan.getName());
+
+        return planMapper.toDto(plan);
+    }
+
+    public Object quitPlan(JoinPlanDTO joinPlan) {
+
+        Plan plan = planRepository.findById(joinPlan.getPlanId())
+                .orElseThrow(() -> new IllegalArgumentException("Plan not found"));
+
+        User user = userRepository.findByEmail(joinPlan.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        if (!plan.getParticipants().stream().noneMatch(p -> p.getEmail().equals(user.getEmail())))
+            throw new IllegalArgumentException("User is not a participant in this plan");
+
+        plan.getParticipants().remove(user);
+        planRepository.save(plan);
+
+        log.info("User {} quit plan {}", user.getEmail(), plan.getName());
 
         return planMapper.toDto(plan);
     }

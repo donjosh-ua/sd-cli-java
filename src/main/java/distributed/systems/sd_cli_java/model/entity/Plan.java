@@ -37,7 +37,7 @@ public class Plan {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "plan_user", joinColumns = @JoinColumn(name = "plan_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     @Comment("List of users associated with the plan")
-    private List<User> users;
+    private List<User> participants;
 
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
     @Comment("List of expenses associated with the plan")
@@ -46,6 +46,14 @@ public class Plan {
     @Column(nullable = false)
     @Comment("Name of the plan")
     private String name;
+
+    @Column(nullable = true)
+    @Comment("Description of the plan")
+    private String description;
+
+    @Column(nullable = false)
+    @Comment("Category of the plan")
+    private String category;
 
     @Column(nullable = false)
     @Comment("Date of the plan")

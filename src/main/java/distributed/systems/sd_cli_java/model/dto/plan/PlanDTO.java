@@ -20,11 +20,15 @@ public class PlanDTO {
 
     private Long id;
     private String name;
+    private UserDTO owner;
     private LocalDateTime date;
     private Boolean status;
+    private String description;
+    private String category;
+    private Float totalAmount;
 
     @Builder.Default
-    private List<UserDTO> users = new ArrayList<>();
+    private List<UserDTO> participants = new ArrayList<>();
 
     @Builder.Default
     private List<ExpenseDTO> expenses = new ArrayList<>();

@@ -46,12 +46,12 @@ public class PlanService {
     }
 
     public Plan addUserToPlan(Plan plan, User user) {
-        plan.getUsers().add(user);
+        plan.getParticipants().add(user);
         return planRepository.save(plan);
     }
 
     public Plan removeUserFromPlan(Plan plan, User user) {
-        plan.getUsers().remove(user);
+        plan.getParticipants().remove(user);
         return planRepository.save(plan);
     }
 

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import distributed.systems.sd_cli_java.model.dto.expense.ExpenseDTO;
+import distributed.systems.sd_cli_java.service.ExpenseService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -20,14 +21,11 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/expenses")
 public class ExpenseController {
 
-    @GetMapping
-    public ResponseEntity<?> getAllExpenses() {
-        throw new IllegalArgumentException("Not implemented yet");
-    }
+    private final ExpenseService expenseService;
 
     @GetMapping("/{expenseId}")
     public ResponseEntity<?> getExpenseById(@PathVariable Long expenseId) {
-        throw new IllegalArgumentException("Not implemented yet");
+        return ResponseEntity.ok(expenseService.findById(expenseId));
     }
 
     @GetMapping("/participants/{expenseId}")
@@ -37,17 +35,26 @@ public class ExpenseController {
 
     @PostMapping
     public ResponseEntity<?> createExpense(@RequestBody ExpenseDTO expense) {
-        throw new IllegalArgumentException("Not implemented yet");
+        return ResponseEntity.ok(expenseService.createExpense(expense));
     }
 
     @PutMapping
     public ResponseEntity<?> updateExpense(@RequestBody ExpenseDTO expense) {
-        throw new IllegalArgumentException("Not implemented yet");
+        return ResponseEntity.ok(expenseService.updateExpense(expense));
     }
 
     @DeleteMapping
     public ResponseEntity<?> deleteExpense(@RequestBody Map<String, Long> fields) {
-        throw new IllegalArgumentException("Not implemented yet");
+
+        Long expenseId = fields.get("id");
+
+        if (expenseId == null) {
+            return ResponseEntity.badRequest().body("Expense ID is required");
+        }
+
+        expenseService.deleteExpense(expenseId);
+
+        return ResponseEntity.ok("Expense deleted successfully");
     }
 
 }

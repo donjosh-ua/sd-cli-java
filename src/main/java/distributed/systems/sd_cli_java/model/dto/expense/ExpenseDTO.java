@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ExpenseDTO {
 
-    private Long id;
+    private Long expenseId;
     private String name;
     private Float amount;
     private LocalDateTime date;

@@ -1,96 +1,67 @@
-// package distributed.systems.sd_cli_java.service;
+package distributed.systems.sd_cli_java.service;
 
-// import java.time.LocalDateTime;
-// import java.util.List;
-// import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
-// import org.springframework.stereotype.Service;
-// import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-// import distributed.systems.sd_cli_java.model.entity.Expense;
-// import distributed.systems.sd_cli_java.model.entity.Plan;
-// import distributed.systems.sd_cli_java.model.entity.User;
-// import distributed.systems.sd_cli_java.repository.ExpenseRepository;
-// import lombok.RequiredArgsConstructor;
+import distributed.systems.sd_cli_java.mapper.ExpenseMapper;
+import distributed.systems.sd_cli_java.model.dto.expense.ExpenseDTO;
+import distributed.systems.sd_cli_java.model.entity.Expense;
+import distributed.systems.sd_cli_java.repository.ExpenseRepository;
+import lombok.RequiredArgsConstructor;
 
-// @Service
-// @Transactional
-// @RequiredArgsConstructor
-// public class ExpenseService {
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class ExpenseService {
 
-    // private final ExpenseRepository expenseRepository;
-    // private final KafkaProducerService kafkaProducerService;
+    private final ExpenseRepository expenseRepository;
+    private final ExpenseMapper expenseMapper;
 
-    // public Expense createExpense(Expense expense) {
+    public ExpenseDTO createExpense(ExpenseDTO expense) {
+        if (expense.getAmount() <= 0) {
+            throw new IllegalArgumentException("Expense amount must be greater than zero");
+        }
 
-    // Expense savedExpense = expenseRepository.save(expense);
+        if (expense.getPlanId() == null) {
+            throw new IllegalArgumentException("Expense must be associated with a plan");
+        }
 
-    // if (savedExpense.getPlan() != null) {
-    // kafkaProducerService.sendExpenseCreatedNotification(savedExpense);
-    // }
+        Expense expenseEntity = expenseMapper.toEntity(expense);
+        expenseEntity.setDate(LocalDateTime.now());
 
-    // return savedExpense;
-    // }
+        expenseRepository.save(expenseEntity);
 
-    // public Expense updateExpense(Expense expense) {
+        return expenseMapper.toDto(expenseEntity);
+    }
 
-    // Expense updatedExpense = expenseRepository.save(expense);
+    public ExpenseDTO updateExpense(ExpenseDTO expense) {
 
-    // if (updatedExpense.getPlan() != null) {
-    // kafkaProducerService.sendExpenseCreatedNotification(updatedExpense);
-    // }
+        if (!expenseRepository.existsById(expense.getExpenseId())) {
+            throw new IllegalArgumentException("Expense not found");
+        }
 
-    // return updatedExpense;
-    // }
+        return expenseMapper.toDto(expenseRepository.save(expenseMapper.toEntity(expense)));
+    }
 
-//     public Optional<Expense> findById(Long id) {
-//         return expenseRepository.findById(id);
-//     }
+    public Optional<ExpenseDTO> findById(Long id) {
 
-//     public List<Expense> findAllExpenses() {
-//         return expenseRepository.findAll();
-//     }
+        if (!expenseRepository.existsById(id)) {
+            throw new IllegalArgumentException("Expense not found");
+        }
 
-//     public void deleteExpense(Long id) {
-//         expenseRepository.deleteById(id);
-//     }
+        return expenseRepository.findById(id).map(expenseMapper::toDto);
+    }
 
-//     public List<Expense> findExpensesByUser(User user) {
-//         return expenseRepository.findByUser(user);
-//     }
+    public List<ExpenseDTO> findAllExpenses() {
+        return expenseMapper.toDtoList(expenseRepository.findAll());
+    }
 
-//     public List<Expense> findByPlan(Plan plan) {
-//         return expenseRepository.findByPlan(plan);
-//     }
+    public void deleteExpense(Long id) {
+        expenseRepository.deleteById(id);
+    }
 
-//     public List<Expense> findExpensesByType(String type) {
-//         return expenseRepository.findByType(type);
-//     }
-
-//     public List<Expense> findExpensesByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
-//         return expenseRepository.findByDateBetween(startDate, endDate);
-//     }
-
-//     public List<Expense> findExpensesByPlanAndType(Plan plan, String type) {
-//         return expenseRepository.findByPlanAndType(plan, type);
-//     }
-
-//     public List<Expense> findExpensesByUserAndPlan(User user, Plan plan) {
-//         return expenseRepository.findByUserAndPlan(user, plan);
-//     }
-
-//     public Float calculateTotalExpensesForPlan(Plan plan) {
-//         List<Expense> expenses = expenseRepository.findByPlan(plan);
-//         return expenses.stream()
-//                 .map(Expense::getAmount)
-//                 .reduce(0.0f, Float::sum);
-//     }
-
-//     public Float calculateTotalExpensesForUser(User user) {
-//         List<Expense> expenses = expenseRepository.findByUser(user);
-//         return expenses.stream()
-//                 .map(Expense::getAmount)
-//                 .reduce(0.0f, Float::sum);
-//     }
-
-// }
+}

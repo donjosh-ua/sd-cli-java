@@ -34,11 +34,6 @@ public class Expense {
     @Comment("The plan associated with the expense")
     private Plan plan;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    @Comment("The user who created the expense")
-    private User user;
-
     @ManyToMany
     @JoinTable(name = "expense_user", joinColumns = @JoinColumn(name = "expense_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     @Comment("List of users participating in the expense")

@@ -174,7 +174,7 @@ public class PlanService {
         User user = userRepository.findByEmail(joinPlan.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        if (!plan.getParticipants().stream().noneMatch(p -> p.getEmail().equals(user.getEmail())))
+        if (plan.getParticipants().stream().noneMatch(p -> p.getEmail().equals(user.getEmail())))
             throw new IllegalArgumentException("User is not a participant in this plan");
 
         plan.getParticipants().remove(user);

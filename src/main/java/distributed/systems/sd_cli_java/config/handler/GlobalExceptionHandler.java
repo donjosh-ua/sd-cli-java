@@ -30,4 +30,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ResponseDTO> handleNullPointerException(NullPointerException e) {
+        ResponseDTO response = ResponseDTO.builder()
+                .success(false)
+                .data(Map.of("error", "Null pointer exception occurred. Please check your input"))
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }

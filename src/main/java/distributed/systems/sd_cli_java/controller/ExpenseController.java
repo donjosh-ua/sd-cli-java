@@ -30,6 +30,11 @@ public class ExpenseController {
         throw new IllegalArgumentException("Not implemented yet");
     }
 
+    @GetMapping("/participants/{expenseId}")
+    public ResponseEntity<?> getParticipants(@PathVariable Long expenseId) {
+        throw new IllegalArgumentException("Not implemented yet");
+    }
+
     @PostMapping
     public ResponseEntity<?> createExpense(@RequestBody ExpenseDTO expense) {
         throw new IllegalArgumentException("Not implemented yet");

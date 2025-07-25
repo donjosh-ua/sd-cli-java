@@ -8,6 +8,8 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import distributed.systems.sd_cli_java.mapper.PlanMapper;
+import distributed.systems.sd_cli_java.model.dto.plan.PlanDTO;
 import distributed.systems.sd_cli_java.model.entity.Expense;
 import distributed.systems.sd_cli_java.model.entity.Plan;
 import distributed.systems.sd_cli_java.model.entity.User;
@@ -22,11 +24,24 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class PlanService {
 
+    private final PlanMapper planMapper;
     private final PlanRepository planRepository;
     private final ExpenseRepository expenseRepository;
 
-    public Plan createPlan(Plan plan) {
-        return planRepository.save(plan);
+    public PlanDTO createPlan(PlanDTO planDto) {
+
+        if (planDto.getOwner() == null || planDto.getOwner().isEmpty()) {
+            throw new IllegalArgumentException("Plan owner cannot be null or empty");
+        }
+
+        planDto.setDate(LocalDateTime.now());
+        planDto.setStatus(true);
+
+        Plan planEntity = planRepository.save(planMapper.toEntity(planDto));
+
+        log.info("Plan created with name: {}", planDto.getName());
+
+        return planMapper.toDto(planEntity);
     }
 
     public Plan updatePlan(Plan plan) {

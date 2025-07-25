@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import distributed.systems.sd_cli_java.model.dto.user.UserDTO;
 
 @Data
 @Builder
@@ -14,9 +13,9 @@ import distributed.systems.sd_cli_java.model.dto.user.UserDTO;
 @AllArgsConstructor
 public class PlanDTO {
 
-    private Long id;
+    private Long planId;
     private String name;
-    private UserDTO owner;
+    private String owner;
     private LocalDateTime date;
     private Boolean status;
     private String description;

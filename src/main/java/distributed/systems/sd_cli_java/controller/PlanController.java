@@ -48,7 +48,7 @@ public class PlanController {
 
     @PostMapping
     public ResponseEntity<?> createPlan(@RequestBody PlanDTO plan) {
-        throw new IllegalArgumentException("Not implemented yet");
+        return new ResponseEntity<>(planService.createPlan(plan), HttpStatus.CREATED);
     }
 
     @PutMapping

@@ -36,7 +36,7 @@ public class User {
     @Comment("List of expenses where the user is a participant")
     private List<Expense> expenses;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(mappedBy = "participants", cascade = CascadeType.ALL)
     @Comment("List of plans associated with the user")
     private List<Plan> plans;
 

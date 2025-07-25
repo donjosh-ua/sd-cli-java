@@ -49,8 +49,13 @@ public class PlanService {
                 .orElseThrow(() -> new IllegalArgumentException("Owner not found"));
 
         Plan planEntity = planMapper.toEntity(planDto);
+        String code = Util.generatePlanCode();
 
-        planEntity.setCode(Util.generatePlanCode());
+        while (planRepository.findByCode(code).isPresent()) {
+            code = Util.generatePlanCode();
+        }
+
+        planEntity.setCode(code);
         planEntity.setDate(LocalDateTime.now());
         planEntity.setStatus(true);
         planEntity.setParticipants(List.of(owner));

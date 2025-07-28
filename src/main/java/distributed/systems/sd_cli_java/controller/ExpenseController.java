@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import distributed.systems.sd_cli_java.model.dto.expense.ExpenseRequestDTO;
-import distributed.systems.sd_cli_java.model.dto.expense.ExpenseDTO;
 import distributed.systems.sd_cli_java.service.ExpenseService;
 import lombok.RequiredArgsConstructor;
 

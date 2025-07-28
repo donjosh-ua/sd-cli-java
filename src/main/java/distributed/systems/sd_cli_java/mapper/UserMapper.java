@@ -29,4 +29,8 @@ public interface UserMapper {
     @Mapping(target = "email", expression = "java(request.getEmail().toLowerCase().trim())")
     @Mapping(target = "nickname", expression = "java(request.getNickname().trim())")
     User toEntity(UserRequestDTO request);
+
+    @Mapping(target = "email", expression = "java(response.getEmail().toLowerCase().trim())")
+    @Mapping(target = "nickname", expression = "java(response.getNickname().trim())")
+    User toEntity(UserResponseDTO response);
 }

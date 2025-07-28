@@ -41,9 +41,8 @@ public class PlanService {
     @Transactional
     public PlanDTO createPlan(PlanDTO planDto) {
 
-        if (planDto.getOwner() == null || planDto.getOwner().isEmpty()) {
+        if (planDto.getOwner() == null || planDto.getOwner().isEmpty())
             throw new IllegalArgumentException("Plan owner cannot be null or empty");
-        }
 
         User owner = userRepository.findByEmail(planDto.getOwner())
                 .orElseThrow(() -> new IllegalArgumentException("Owner not found"));
@@ -51,9 +50,8 @@ public class PlanService {
         Plan planEntity = planMapper.toEntity(planDto);
         String code = Util.generatePlanCode();
 
-        while (planRepository.findByCode(code).isPresent()) {
+        while (planRepository.findByCode(code).isPresent())
             code = Util.generatePlanCode();
-        }
 
         planEntity.setCode(code);
         planEntity.setDate(LocalDateTime.now());
@@ -100,9 +98,8 @@ public class PlanService {
 
     public List<UserResponseDTO> findParticipantsByPlanId(Long planId) {
 
-        if (!planRepository.existsById(planId)) {
+        if (!planRepository.existsById(planId))
             throw new IllegalArgumentException("Plan not found");
-        }
 
         List<User> participants = planRepository.findById(planId)
                 .orElseThrow(() -> new IllegalArgumentException("Plan not found"))
@@ -113,9 +110,8 @@ public class PlanService {
 
     public List<ExpenseDTO> findExpensesByPlanId(Long planId) {
 
-        if (!planRepository.existsById(planId)) {
+        if (!planRepository.existsById(planId))
             throw new IllegalArgumentException("Plan not found");
-        }
 
         List<Expense> expenses = planRepository.findById(planId)
                 .orElseThrow(() -> new IllegalArgumentException("Plan not found"))

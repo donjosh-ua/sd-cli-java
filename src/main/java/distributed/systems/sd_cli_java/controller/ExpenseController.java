@@ -40,13 +40,24 @@ public class ExpenseController {
         return new ResponseEntity<>(expenseService.createExpense(expense), HttpStatus.CREATED);
     }
 
+    @PostMapping("/join")
+    public ResponseEntity<?> joinExpense(@RequestBody Map<String, Object> fields) {
+        return new ResponseEntity<>(expenseService.joinExpense(fields), HttpStatus.OK);
+    }
+
+    @PostMapping("/quit")
+    public ResponseEntity<?> quitExpense(@RequestBody Map<String, Object> fields) {
+        return new ResponseEntity<>(expenseService.quitExpense(fields), HttpStatus.OK);
+    }
+
     @PutMapping
-    public ResponseEntity<?> updateExpense(@RequestBody ExpenseDTO expense) {
-        return new ResponseEntity<>(expenseService.updateExpense(expense), HttpStatus.OK);
+    public ResponseEntity<?> updateExpense(@RequestBody Map<String, Object> fields) {
+        return new ResponseEntity<>(expenseService.updateExpense(fields), HttpStatus.OK);
     }
 
     @DeleteMapping
     public ResponseEntity<?> deleteExpense(@RequestBody Map<String, Long> fields) {
+        // TODO: Review this method
 
         Long expenseId = fields.get("id");
 

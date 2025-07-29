@@ -40,13 +40,7 @@ public class ExpenseController {
 
     @PostMapping
     public ResponseEntity<?> createExpense(@RequestBody ExpenseRequestDTO expense) {
-
         ExpenseDTO createdExpense = expenseService.createExpense(expense);
-
-        expensePublisher.publishExpenseAdded(
-                new ExpenseAddedEvent(
-                        createdExpense.getPlanId(), createdExpense));
-
         return new ResponseEntity<>(createdExpense, HttpStatus.CREATED);
     }
 

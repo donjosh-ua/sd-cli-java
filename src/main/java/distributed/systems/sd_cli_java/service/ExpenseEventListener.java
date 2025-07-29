@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import distributed.systems.sd_cli_java.controller.WebSocketController;
 import distributed.systems.sd_cli_java.model.dto.expense.ExpenseAddedEvent;
+import distributed.systems.sd_cli_java.model.dto.expense.ExpenseRequestDTO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -24,11 +25,11 @@ public class ExpenseEventListener {
     @RabbitListener(queues = "${rabbitmq.expense.queue}")
     public void onExpenseEventReceived(String message) {
         try {
-            ExpenseAddedEvent event = objectMapper.readValue(message, ExpenseAddedEvent.class);
+            ExpenseRequestDTO event = objectMapper.readValue(message, ExpenseRequestDTO.class);
             log.info("📥 Received event for plan {}", event.getPlanId());
             webSocketController.notifyExpenseAdded(event.getPlanId().toString(), event);
         } catch (Exception e) {
-            log.error("❌ Failed to parse ExpenseAddedEvent from message: {}", message, e);
+            log.error("❌ Failed to parse ExpenseRequestDTO from message: {}", message, e);
         }
     }
 }

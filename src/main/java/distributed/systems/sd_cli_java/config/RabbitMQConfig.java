@@ -22,7 +22,10 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    Binding expenseBinding(Queue expenseQueue, FanoutExchange expenseExchange) {
+    Binding expenseBinding(
+            Queue expenseQueue,
+            FanoutExchange expenseExchange) {
         return BindingBuilder.bind(expenseQueue).to(expenseExchange);
     }
+
 }

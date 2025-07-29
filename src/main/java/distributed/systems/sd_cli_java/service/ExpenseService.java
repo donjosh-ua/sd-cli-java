@@ -7,8 +7,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import distributed.systems.sd_cli_java.mapper.ExpenseMapper;
 import distributed.systems.sd_cli_java.mapper.UserMapper;
@@ -30,6 +33,7 @@ public class ExpenseService {
 
     private final ExpenseRepository expenseRepository;
     private final UserRepository userRepository;
+    private final RabbitTemplate rabbitTemplate;
     private final ExpenseMapper expenseMapper;
     private final UserMapper userMapper;
 
@@ -70,6 +74,21 @@ public class ExpenseService {
             userRepository.findByEmail(participantEmail).ifPresent(u -> expenseEntity.getParticipants().add(u));
 
         expenseRepository.save(expenseEntity);
+
+        String json = "";
+
+        try {
+            json = new ObjectMapper().writeValueAsString(expense);
+        } catch (Exception e) {
+            log.error("Error serializing expense to JSON", e);
+        }
+
+        rabbitTemplate.convertAndSend(
+                "expense.topic",
+                "expense.added",
+                json);
+
+        log.info("Published expense event to RabbitMQ");
 
         return expenseMapper.toDto(expenseEntity);
     }

@@ -7,10 +7,8 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.socket.WebSocketSession;
 
 import distributed.systems.sd_cli_java.common.Util;
-import distributed.systems.sd_cli_java.config.handler.WebSocketHandler;
 import distributed.systems.sd_cli_java.mapper.ExpenseMapper;
 import distributed.systems.sd_cli_java.mapper.PlanMapper;
 import distributed.systems.sd_cli_java.mapper.UserMapper;
@@ -39,7 +37,6 @@ public class PlanService {
     private final PlanRepository planRepository;
     private final UserRepository userRepository;
     private final ExpenseRepository expenseRepository;
-    private final WebSocketHandler webSocketHandler;
 
     @Transactional
     public PlanDTO createPlan(PlanDTO planDto) {
@@ -173,14 +170,6 @@ public class PlanService {
         planRepository.save(plan);
 
         log.info("User {} joined plan {}", user.getEmail(), plan.getName());
-
-        WebSocketSession session = webSocketHandler.getSessionForUser(user.getEmail());
-
-        if (session != null && session.isOpen()) {
-            webSocketHandler.bindSessionToPlan(session, plan.getPlanId().toString());
-            log.info("Bound WebSocket session for {} to plan {}", user.getEmail(), plan.getPlanId());
-        } else
-            log.warn("No active WebSocket session for user {}", user.getEmail());
 
         return planMapper.toDto(plan);
     }

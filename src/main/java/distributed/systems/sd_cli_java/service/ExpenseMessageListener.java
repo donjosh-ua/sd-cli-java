@@ -1,21 +1,33 @@
 package distributed.systems.sd_cli_java.service;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import distributed.systems.sd_cli_java.controller.ExpenseWebSocketController;
+import distributed.systems.sd_cli_java.model.dto.expense.ExpenseCreatedNotificationDTO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
 public class ExpenseMessageListener {
 
-    private final SimpMessagingTemplate messagingTemplate;
+    private final ObjectMapper objectMapper;
+    private final ExpenseWebSocketController controller;
 
-    public ExpenseMessageListener(SimpMessagingTemplate messagingTemplate) {
-        this.messagingTemplate = messagingTemplate;
+    public ExpenseMessageListener(ObjectMapper objectMapper, ExpenseWebSocketController controller) {
+        this.objectMapper = objectMapper;
+        this.controller = controller;
     }
 
-    @RabbitListener(queues = "#{queue.name}")
-    public void receive(String message) {
-        // This will forward the message to all clients subscribed to /topic/expenses
-        messagingTemplate.convertAndSend("/topic/expenses", message);
+    @RabbitListener(queues = "${rabbitmq.expense.queue}")
+    public void handleExpenseAddedEvent(String message) {
+        try {
+            ExpenseCreatedNotificationDTO dto = objectMapper.readValue(message, ExpenseCreatedNotificationDTO.class);
+            controller.sendExpenseUpdate(dto.getId().toString(), dto);
+        } catch (Exception e) {
+            log.error("Failed to process message: {}", e.getMessage());
+        }
     }
 }

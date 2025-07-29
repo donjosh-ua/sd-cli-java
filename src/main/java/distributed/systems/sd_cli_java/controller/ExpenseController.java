@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import distributed.systems.sd_cli_java.model.dto.expense.ExpenseAddedEvent;
+import distributed.systems.sd_cli_java.model.dto.expense.ExpenseDTO;
 import distributed.systems.sd_cli_java.model.dto.expense.ExpenseRequestDTO;
+import distributed.systems.sd_cli_java.service.ExpensePublisher;
 import distributed.systems.sd_cli_java.service.ExpenseService;
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class ExpenseController {
 
     private final ExpenseService expenseService;
+    private final ExpensePublisher expensePublisher;
 
     @GetMapping("/{expenseId}")
     public ResponseEntity<?> getExpenseById(@PathVariable Long expenseId) {
@@ -36,7 +40,14 @@ public class ExpenseController {
 
     @PostMapping
     public ResponseEntity<?> createExpense(@RequestBody ExpenseRequestDTO expense) {
-        return new ResponseEntity<>(expenseService.createExpense(expense), HttpStatus.CREATED);
+
+        ExpenseDTO createdExpense = expenseService.createExpense(expense);
+
+        expensePublisher.publishExpenseAdded(
+                new ExpenseAddedEvent(
+                        createdExpense.getPlanId(), createdExpense));
+
+        return new ResponseEntity<>(createdExpense, HttpStatus.CREATED);
     }
 
     @PostMapping("/join")

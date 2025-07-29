@@ -5,20 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExpenseDTO {
+public class ExpenseAddedEvent {
 
     private Long planId;
-    private Long expenseId;
-    private String name;
-    private String type;
-    private String icon;
-    private Float amount;
-    private LocalDateTime date;
+    private ExpenseDTO expense;
 
 }

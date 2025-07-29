@@ -1,20 +1,18 @@
 package distributed.systems.sd_cli_java.service;
 
-import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
-import distributed.systems.sd_cli_java.config.RabbitMQConfig;
+import distributed.systems.sd_cli_java.model.dto.expense.ExpenseAddedEvent;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class ExpensePublisher {
 
-    private final AmqpTemplate rabbitTemplate;
+    private final RabbitTemplate rabbitTemplate;
 
-    public ExpensePublisher(AmqpTemplate rabbitTemplate) {
-        this.rabbitTemplate = rabbitTemplate;
-    }
-
-    public void publishExpenseUpdate(String message) {
-        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, "", message);
+    public void publishExpenseAdded(ExpenseAddedEvent event) {
+        rabbitTemplate.convertAndSend("expense.exchange", "expense.added", event);
     }
 }

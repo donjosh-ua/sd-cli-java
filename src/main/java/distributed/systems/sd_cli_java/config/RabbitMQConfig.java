@@ -1,31 +1,28 @@
 package distributed.systems.sd_cli_java.config;
 
-import org.springframework.amqp.core.AnonymousQueue;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQConfig {
 
-    public static final String EXCHANGE_NAME = "expense.fanout";
-    public static final String QUEUE_NAME = "expense.queue";
-
     @Bean
-    FanoutExchange fanoutExchange() {
-        return new FanoutExchange(EXCHANGE_NAME);
+    Queue expenseQueue(@Value("${rabbitmq.expense.queue}") String queueName) {
+        return new Queue(queueName, true);
     }
 
     @Bean
-    Queue queue() {
-        return new AnonymousQueue();
+    FanoutExchange expenseExchange(@Value("${rabbitmq.exchange}") String exchangeName) {
+        return new FanoutExchange(exchangeName);
     }
 
     @Bean
-    Binding binding(Queue queue, FanoutExchange fanoutExchange) {
-        return BindingBuilder.bind(queue).to(fanoutExchange);
+    Binding expenseBinding(Queue expenseQueue, FanoutExchange expenseExchange) {
+        return BindingBuilder.bind(expenseQueue).to(expenseExchange);
     }
 }

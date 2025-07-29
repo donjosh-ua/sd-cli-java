@@ -77,6 +77,9 @@ public class PlanService {
         if (planDto.getCategory() != null)
             planEntity.setCategory(planDto.getCategory());
 
+        if (planDto.getStatus() != null)
+            planEntity.setStatus(planDto.getStatus());
+
         planRepository.save(planEntity);
 
         log.info("Plan updated with id: {}", planDto.getPlanId());
